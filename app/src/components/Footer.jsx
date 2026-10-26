@@ -1,16 +1,18 @@
 import PropTypes from "prop-types";
 import { useCallback } from "react";
-import { Link } from "react-router-dom";
-import { HashLink } from "react-router-hash-link";
+import { useNavigate } from "react-router-dom";
+import { handleAnchorClick } from "../utils/scrollToSection";
 
+// target vide = haut de page
 const navItems = [
-  { label: "Accueil", href: "/" },
-  { label: "À propos", href: "/#a-propos" },
-  { label: "Nos Offres de Services", href: "/#offres-services" },
-  { label: "Publications", href: "/publications" },
+  { label: "Accueil", target: "" },
+  { label: "À propos", target: "a-propos" },
+  { label: "Nos Offres de Services", target: "offres-services" },
+  { label: "Publications", target: "publications" },
 ];
 
 const Footer = ({ className = "" }) => {
+  const navigate = useNavigate();
   const onLinkClick = useCallback(() => {
     window.open("mailto:contact@iecameroun.cm");
   }, []);
@@ -52,34 +54,16 @@ const Footer = ({ className = "" }) => {
 
               {/* Navigation */}
               <nav className="hidden lg:flex items-center gap-10 text-body font-[Poppins]">
-                {navItems.map((item) => {
-                  const isAnchor = item.href.includes("#");
-
-                  if (isAnchor) {
-                    return (
-                        <HashLink
-                            key={item.href}
-                            smooth
-                            to={item.href}
-                            className="no-underline"
-                        >
-                  <span className="transition-colors duration-300 hover:text-primary">
-                    {item.label}
-                  </span>
-                        </HashLink>
-                    );
-                  }
-
-                  return (
-                      <Link
-                          key={item.href}
-                          to={item.href}
-                          className="no-underline transition-colors duration-300 hover:text-primary"
-                      >
-                        {item.label}
-                      </Link>
-                  );
-                })}
+                {navItems.map((item) => (
+                    <a
+                        key={item.label}
+                        href={item.target ? `/#${item.target}` : "/"}
+                        onClick={(e) => handleAnchorClick(e, item.target, navigate)}
+                        className="no-underline transition-colors duration-300 hover:text-primary"
+                    >
+                      {item.label}
+                    </a>
+                ))}
               </nav>
               
 
@@ -185,7 +169,7 @@ const Footer = ({ className = "" }) => {
               </p>
 
               <p className="font-medium text-heading">
-                Veille • Influence • Protection
+                Veille • Innovation • Influence • Protection
               </p>
 
             </div>

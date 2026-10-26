@@ -1,19 +1,42 @@
 import { useCallback, useState } from "react";
 import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";
-import { HashLink } from "react-router-hash-link";
+import { Link, useNavigate } from "react-router-dom";
 import { MapPin, Compass, Menu, X, ArrowUpRight } from "lucide-react";
+import { handleAnchorClick } from "../utils/scrollToSection";
 
+// target vide = haut de page
 const navItems = [
-  { label: "Accueil", href: "/" },
-  { label: "À propos", href: "/#a-propos" },
-  { label: "Nos Offres de Services", href: "/#offres-services" },
-  { label: "Publications", href: "/#publications" },
-  { label: "Galerie", href: "/#galerie" },
+  { label: "Accueil", target: "" },
+  { label: "À propos", target: "a-propos" },
+  { label: "Nos Offres de Services", target: "offres-services" },
+  { label: "Publications", target: "publications" },
+  { label: "Galerie", target: "galerie" },
+  { label: "MOPIET 2026", to: "/mopiet-2026" },
 ];
 
-const Header = ({ className = "" }) => {
+const Header = ({ className = "", hero = true }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  // Lien vers une page (to) ou vers une section de l'accueil (target)
+  const renderNavItem = (item, children, onNavigate) =>
+      item.to ? (
+          <Link key={item.label} to={item.to} onClick={onNavigate} className="no-underline">
+            {children}
+          </Link>
+      ) : (
+          <a
+              key={item.label}
+              href={item.target ? `/#${item.target}` : "/"}
+              onClick={(e) => {
+                onNavigate?.();
+                handleAnchorClick(e, item.target, navigate);
+              }}
+              className="no-underline"
+          >
+            {children}
+          </a>
+      );
 
   const onLinkClick = useCallback(() => {
     setMenuOpen(false);
@@ -24,7 +47,7 @@ const Header = ({ className = "" }) => {
 
   return (
       <header className={`relative w-full bg-background ${className}`}>
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-sm shadow-sm">
+        <nav data-site-nav className="fixed top-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-sm shadow-sm">
           <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4 px-5 sm:px-8 lg:px-12 py-3 text-heading font-[Poppins]">
             <h2 className="m-0 text-base sm:text-lg lg:text-xl font-semibold shrink-0">
               Intelligence Economique | IE237
@@ -40,34 +63,13 @@ const Header = ({ className = "" }) => {
               {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
 
-            <div className="hidden lg:flex items-center gap-6 xl:gap-10 2xl:gap-14 text-sm xl:text-base font-medium text-heading">
-              {navItems.map((item) => {
-                const isAnchor = item.href.includes("#");
-
-                if (isAnchor) {
-                  return (
-                      <HashLink key={item.href} to={item.href} smooth className="no-underline">
-                    <span className="transition-colors hover:text-primary">
-                      {item.label}
-                    </span>
-                      </HashLink>
-                  );
-                }
-
-                return (
-                    <NavLink key={item.href} to={item.href} end className="no-underline">
-                      {({ isActive }) => (
-                          <span
-                              className={`transition-colors ${
-                                  isActive ? "text-primary" : "hover:text-primary"
-                              }`}
-                          >
-                      {item.label}
-                    </span>
-                      )}
-                    </NavLink>
-                );
-              })}
+            <div className="hidden lg:flex items-center gap-5 xl:gap-8 2xl:gap-12 text-sm xl:text-base font-medium text-heading">
+              {navItems.map((item) =>
+                  renderNavItem(
+                      item,
+                      <span className="whitespace-nowrap transition-colors hover:text-primary">{item.label}</span>,
+                  ),
+              )}
             </div>
 
             <button
@@ -84,29 +86,22 @@ const Header = ({ className = "" }) => {
 
           {/* Menu mobile */}
           <div
-              className={`lg:hidden absolute left-0 right-0 top-full origin-top overflow-hidden transition-all duration-300 ${
-                  menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0 pointer-events-none"
+              className={`lg:hidden absolute left-0 right-0 top-full origin-top transition-all duration-300 ${
+                  menuOpen
+                      ? "max-h-[calc(100dvh-76px)] overflow-y-auto overscroll-contain opacity-100"
+                      : "max-h-0 overflow-hidden opacity-0 pointer-events-none"
               }`}
           >
-            <div className="mx-5 sm:mx-8 mt-2 rounded-2xl border border-border bg-surface shadow-lg flex flex-col divide-y divide-border">
-              {navItems.map((item) => {
-                const isAnchor = item.href.includes("#");
-                const content = (
-                    <span className="block px-5 py-4 text-base font-medium text-heading transition-colors hover:text-primary">
-                  {item.label}
-                </span>
-                );
-
-                return isAnchor ? (
-                    <HashLink key={item.href} to={item.href} smooth onClick={closeMenu} className="no-underline">
-                      {content}
-                    </HashLink>
-                ) : (
-                    <NavLink key={item.href} to={item.href} end onClick={closeMenu} className="no-underline">
-                      {content}
-                    </NavLink>
-                );
-              })}
+            <div className="mx-5 sm:mx-8 mt-2 mb-4 rounded-2xl border border-border bg-surface shadow-lg flex flex-col divide-y divide-border">
+              {navItems.map((item) =>
+                  renderNavItem(
+                      item,
+                      <span className="block px-5 py-4 text-base font-medium text-heading transition-colors hover:text-primary">
+                        {item.label}
+                      </span>,
+                      closeMenu,
+                  ),
+              )}
               <button
                   type="button"
                   className="flex items-center justify-center gap-2 m-4 cursor-pointer border-none px-5 py-3 bg-primary hover:bg-primary-hover transition-colors duration-250 rounded-[10px]"
@@ -124,6 +119,8 @@ const Header = ({ className = "" }) => {
         {/* Espaceur pour compenser la navbar fixe */}
         <div className="h-[60px] sm:h-[68px]" />
 
+        {hero && (
+        <>
         <div
             className="relative max-w-[1440px] mx-auto bg-surface px-5 sm:px-8 lg:px-12 pt-6 pb-10 sm:pt-8 sm:pb-16 lg:pt-10 lg:pb-20"
             id="accueil"
@@ -207,12 +204,15 @@ const Header = ({ className = "" }) => {
             />
           </div>
         </div>
+        </>
+        )}
       </header>
   );
 };
 
 Header.propTypes = {
   className: PropTypes.string,
+  hero: PropTypes.bool,
 };
 
 export default Header;
