@@ -11,7 +11,7 @@ const navItems = [
   { label: "Nos Offres de Services", target: "offres-services" },
   { label: "Publications", target: "publications" },
   { label: "Galerie", target: "galerie" },
-  { label: "MOPIET 2026", to: "/mopiet-2026" },
+  { label: "Événements", to: "/evenements" },
 ];
 
 const Header = ({ className = "", hero = true }) => {

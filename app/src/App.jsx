@@ -2,11 +2,13 @@ import { useEffect } from "react";
 import {
   Routes,
   Route,
+  Navigate,
   useNavigationType,
   useLocation,
 } from "react-router-dom";
 import PageContainer from "./pages/PageContainer";
-import Mopiet2026 from "./pages/Mopiet2026";
+import Evenements from "./pages/Evenements";
+import Evenement from "./pages/Evenement";
 
 function App() {
   const action = useNavigationType();
@@ -28,11 +30,6 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/mopiet-2026":
-        title = "MOPIET 2026 – Chronogramme | IE237";
-        metaDescription =
-          "Programme de la session de formation MOPIET 2026 sur les Méthodes et Outils Pratiques d'Intelligence Économique Territoriale, du 26 au 30 octobre 2026 à Yaoundé.";
-        break;
     }
 
     if (title) {
@@ -52,7 +49,10 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<PageContainer />} />
-      <Route path="/mopiet-2026" element={<Mopiet2026 />} />
+      <Route path="/evenements" element={<Evenements />} />
+      <Route path="/evenements/:slug" element={<Evenement />} />
+      {/* Ancienne adresse de la page MOPIET */}
+      <Route path="/mopiet-2026" element={<Navigate to="/evenements/mopiet-2026" replace />} />
     </Routes>
   );
 }

@@ -1,3 +1,4 @@
+// Événement MOPIET 2026
 //
 // kind :
 //   "module"    → module de formation
@@ -7,20 +8,8 @@
 //   "synthese"  → synthèse et fin des travaux
 // Une entrée { divider: "..." } affiche un intertitre dans la journée.
 
-export const mopiet = {
-  sigle: "MOPIET 2026",
-  titre:
-    "Session de formation sur les Méthodes et Outils Pratiques d'Intelligence Économique Territoriale",
-  dates: "Du lundi 26 au vendredi 30 octobre 2026",
-  debut: "2026-10-26",
-  fin: "2026-10-30",
-  lieu: "Bastos, Yaoundé",
-  organisateurs: "DGRE – CAVIE – IE237",
-  formateur: "Dr Guy GWETH",
-  pointFocal: "Dr KITIO Victor",
-};
 
-export const jours = [
+const jours = [
   {
     numero: 1,
     date: "2026-10-26",
@@ -122,10 +111,44 @@ export const jours = [
 ];
 
 // Les 9 modules, regroupés par volet de l'intelligence économique territoriale
-export const volets = [
+const volets = [
   { titre: "Fondamentaux", modules: [1, 2] },
   { titre: "Volet défensif", modules: [3] },
   { titre: "Volet offensif", modules: [4, 5] },
   { titre: "Volet influence", modules: [6] },
   { titre: "Mise en œuvre", modules: [7, 8, 9] },
 ];
+
+// Photos : déposer les fichiers dans public/evenements/mopiet-2026/
+// puis les ajouter ici, par exemple :
+//   { src: "/evenements/mopiet-2026/ouverture-01.webp", legende: "Cérémonie d'ouverture" },
+const galerie = [];
+
+const mopiet2026 = {
+  slug: "mopiet-2026",
+  sigle: "MOPIET 2026",
+  type: "Formation",
+  theme: "Intelligence économique territoriale",
+  titre:
+    "Session de formation sur les Méthodes et Outils Pratiques d'Intelligence Économique Territoriale",
+  resume:
+    "Cinq jours de formation pour outiller les collectivités territoriales décentralisées en intelligence économique : volets défensif, offensif et d'influence, validation des investisseurs et projets bancables.",
+  debut: "2026-10-26",
+  fin: "2026-10-30",
+  dates: "Du lundi 26 au vendredi 30 octobre 2026",
+  lieu: "Bastos, Yaoundé",
+  couverture: null,
+  infos: [
+    { icon: "users", label: "Organisateurs", value: "DGRE – CAVIE – IE237" },
+    { icon: "graduation", label: "Formateur principal", value: "Dr Guy GWETH" },
+    { icon: "user-check", label: "Point focal", value: "Dr KITIO Victor" },
+  ],
+  document: { href: "/evenements/mopiet-2026/Chronogramme_MOPIET_2026.pdf", label: "Télécharger le chronogramme (PDF)" },
+  jours,
+  volets,
+  certification:
+    "À l'issue de la session, un certificat CAVIE est remis aux participants lors de la cérémonie de clôture du vendredi 30 octobre 2026.",
+  galerie,
+};
+
+export default mopiet2026;
