@@ -9,6 +9,8 @@ import {
 import PageContainer from "./pages/PageContainer";
 import Evenements from "./pages/Evenements";
 import Evenement from "./pages/Evenement";
+import Actualites from "./pages/Actualites";
+import Actualite from "./pages/Actualite";
 
 function App() {
   const action = useNavigationType();
@@ -51,6 +53,8 @@ function App() {
       <Route path="/" element={<PageContainer />} />
       <Route path="/evenements" element={<Evenements />} />
       <Route path="/evenements/:slug" element={<Evenement />} />
+      <Route path="/actualites" element={<Actualites />} />
+      <Route path="/actualites/:slug" element={<Actualite />} />
       {/* Ancienne adresse de la page MOPIET */}
       <Route path="/mopiet-2026" element={<Navigate to="/evenements/mopiet-2026" replace />} />
     </Routes>

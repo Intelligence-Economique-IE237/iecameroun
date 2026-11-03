@@ -1,18 +1,42 @@
 import { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Images, Loader2, X, ChevronLeft, ChevronRight, Camera } from "lucide-react";
+import { Images, Loader2, X, ChevronLeft, ChevronRight, Camera, Download } from "lucide-react";
 import RevealOnScroll from "./RevealOnScroll";
 
 const INITIAL_COUNT = 6;
+
+// Nom proposé au téléchargement : nom d'origine du fichier, sinon tiré de l'URL
+const nomFichier = (photo) => photo.fichier ?? photo.src.split("/").pop();
+
+const DownloadLink = ({ photo, className }) => (
+    <a
+        href={photo.src}
+        download={nomFichier(photo)}
+        onClick={(e) => e.stopPropagation()}
+        className={`flex h-10 w-10 items-center justify-center rounded-full no-underline transition-colors ${className}`}
+        aria-label={`Télécharger la photo${photo.legende ? ` : ${photo.legende}` : ""}`}
+        title="Télécharger"
+    >
+      <Download className="h-[18px] w-[18px]" />
+    </a>
+);
+
+DownloadLink.propTypes = {
+  photo: PropTypes.shape({ src: PropTypes.string.isRequired, fichier: PropTypes.string, legende: PropTypes.string }).isRequired,
+  className: PropTypes.string,
+};
 
 const Thumbnail = ({ photo, onOpen }) => {
   const [loaded, setLoaded] = useState(false);
 
   return (
+      <div className="group relative">
       <button
           type="button"
           onClick={onOpen}
-          className="group relative block w-full aspect-[4/3] cursor-zoom-in overflow-hidden rounded-3xl border-none bg-surface p-0 shadow-sm"
+          className={`relative block w-full cursor-zoom-in overflow-hidden rounded-3xl border-none bg-surface p-0 shadow-sm ${
+              loaded ? "" : "min-h-[240px]"
+          }`}
           aria-label={`Agrandir la photo${photo.legende ? ` : ${photo.legende}` : ""}`}
       >
         {!loaded && (
@@ -26,7 +50,7 @@ const Thumbnail = ({ photo, onOpen }) => {
             loading="lazy"
             decoding="async"
             onLoad={() => setLoaded(true)}
-            className={`h-full w-full object-cover transition-all duration-500 group-hover:scale-105 ${
+            className={`block h-auto w-full transition-all duration-500 group-hover:scale-[1.03] ${
                 loaded ? "opacity-100" : "opacity-0"
             }`}
         />
@@ -39,11 +63,17 @@ const Thumbnail = ({ photo, onOpen }) => {
             </span>
         )}
       </button>
+      {/* Toujours visible sur mobile, au survol sur ordinateur */}
+      <DownloadLink
+          photo={photo}
+          className="absolute right-3 top-3 bg-white/90 text-primary shadow-sm hover:bg-white sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+      />
+      </div>
   );
 };
 
 Thumbnail.propTypes = {
-  photo: PropTypes.shape({ src: PropTypes.string.isRequired, legende: PropTypes.string }).isRequired,
+  photo: PropTypes.shape({ src: PropTypes.string.isRequired, fichier: PropTypes.string, legende: PropTypes.string }).isRequired,
   onOpen: PropTypes.func.isRequired,
 };
 
@@ -78,6 +108,16 @@ const Lightbox = ({ photos, index, onClose, onChange }) => {
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 sm:p-10"
           onClick={onClose}
       >
+        <a
+            href={photo.src}
+            download={nomFichier(photo)}
+            onClick={(e) => e.stopPropagation()}
+            className="absolute right-[4.25rem] top-4 flex h-11 items-center gap-2 rounded-full bg-white/10 px-4 text-sm font-medium text-white no-underline transition-colors hover:bg-white/25 font-[Poppins]"
+        >
+          <Download className="h-4 w-4" />
+          <span className="hidden sm:inline">Télécharger</span>
+        </a>
+
         <button
             type="button"
             onClick={onClose}
@@ -116,6 +156,26 @@ Lightbox.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
+// Nombre de colonnes selon la largeur d'écran (mêmes paliers que Tailwind sm / lg)
+const useColumnCount = () => {
+  const get = () => {
+    if (typeof window === "undefined") return 1;
+    if (window.matchMedia("(min-width: 1024px)").matches) return 3;
+    if (window.matchMedia("(min-width: 640px)").matches) return 2;
+    return 1;
+  };
+  const [count, setCount] = useState(get);
+
+  useEffect(() => {
+    const queries = ["(min-width: 640px)", "(min-width: 1024px)"].map((q) => window.matchMedia(q));
+    const update = () => setCount(get());
+    queries.forEach((mq) => mq.addEventListener("change", update));
+    return () => queries.forEach((mq) => mq.removeEventListener("change", update));
+  }, []);
+
+  return count;
+};
+
 const EventGallery = ({
   photos,
   emptyMessage = "Les photos de l'événement seront publiées prochainement.",
@@ -123,6 +183,7 @@ const EventGallery = ({
   const [showAll, setShowAll] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
   const close = useCallback(() => setOpenIndex(null), []);
+  const nbColonnes = useColumnCount();
 
   if (photos.length === 0) {
     return (
@@ -139,11 +200,19 @@ const EventGallery = ({
 
   return (
       <>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {visible.map((photo, i) => (
-              <RevealOnScroll key={photo.src} delay={(i % INITIAL_COUNT) * 80}>
-                <Thumbnail photo={photo} onOpen={() => setOpenIndex(i)} />
-              </RevealOnScroll>
+        {/* Mosaïque : photos entières, sans recadrage. Répartition en
+            colonnes de gauche à droite pour garder l'ordre chronologique. */}
+        <div className="flex items-start gap-4">
+          {Array.from({ length: nbColonnes }, (_, col) => (
+              <div key={col} className="flex min-w-0 flex-1 flex-col gap-4">
+                {visible.map((photo, i) =>
+                    i % nbColonnes === col ? (
+                        <RevealOnScroll key={photo.src} delay={(i % INITIAL_COUNT) * 80}>
+                          <Thumbnail photo={photo} onOpen={() => setOpenIndex(i)} />
+                        </RevealOnScroll>
+                    ) : null,
+                )}
+              </div>
           ))}
         </div>
 

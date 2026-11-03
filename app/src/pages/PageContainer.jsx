@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import Livrables from "../components/LivrablesCard";
 import AboutUs from "../components/AboutUs";
 import Galery from "../components/Galery";
+import DernieresActualites from "../components/DernieresActualites";
 
 const PageContainer = () => {
   return (
@@ -84,6 +85,9 @@ const PageContainer = () => {
 
 
             <ServicesSection />
+
+
+            <DernieresActualites />
 
 
             {/* Publications */}

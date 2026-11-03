@@ -8,14 +8,27 @@ const DEFAULT_SPOTLIGHT_RADIUS = 300;
 const DEFAULT_GLOW_COLOR = '132, 0, 255';
 const MOBILE_BREAKPOINT = 768;
 
-const handleDownload = (e, url, filename) => {
+const handleDownload = async (e, url, filename) => {
     e.stopPropagation();
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename || 'document.pdf';
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    const telecharger = (href) => {
+        const link = document.createElement('a');
+        link.href = href;
+        link.download = filename || 'document.pdf';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    };
+    // L'attribut download est ignoré quand le PDF est sur un autre domaine (l'API) :
+    // on récupère le fichier puis on le télécharge depuis la mémoire du navigateur.
+    try {
+        const reponse = await fetch(url);
+        if (!reponse.ok) throw new Error(String(reponse.status));
+        const objet = URL.createObjectURL(await reponse.blob());
+        telecharger(objet);
+        setTimeout(() => URL.revokeObjectURL(objet), 1000);
+    } catch {
+        window.open(url, '_blank', 'noopener');
+    }
 };
 
 const createParticleElement = (x, y, color = DEFAULT_GLOW_COLOR) => {

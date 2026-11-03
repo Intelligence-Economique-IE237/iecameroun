@@ -11,6 +11,7 @@ const navItems = [
   { label: "Nos Offres de Services", target: "offres-services" },
   { label: "Publications", target: "publications" },
   { label: "Galerie", target: "galerie" },
+  { label: "Actualités", to: "/actualites" },
   { label: "Événements", to: "/evenements" },
 ];
 

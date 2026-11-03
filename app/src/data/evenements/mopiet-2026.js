@@ -1,4 +1,4 @@
-// Événement MOPIET 2026
+// Événement MOPIET 2026 — chronogramme — source : Chronogramme_MOPIET_2026_Final_Ok.pdf
 //
 // kind :
 //   "module"    → module de formation
@@ -119,10 +119,12 @@ const volets = [
   { titre: "Mise en œuvre", modules: [7, 8, 9] },
 ];
 
-// Photos : déposer les fichiers dans public/evenements/mopiet-2026/
-// puis les ajouter ici, par exemple :
-//   { src: "/evenements/mopiet-2026/ouverture-01.webp", legende: "Cérémonie d'ouverture" },
-const galerie = [];
+// Galerie : les photos (.jpg, .jpeg, .png, .webp) déposées dans
+// src/assets/evenements/mopiet-2026/ sont chargées automatiquement,
+// triées par date de prise de vue. Légendes facultatives, par nom de fichier :
+const legendes = {
+  // "ouverture-01.jpg": "Cérémonie d'ouverture",
+};
 
 const mopiet2026 = {
   slug: "mopiet-2026",
@@ -148,7 +150,7 @@ const mopiet2026 = {
   volets,
   certification:
     "À l'issue de la session, un certificat CAVIE est remis aux participants lors de la cérémonie de clôture du vendredi 30 octobre 2026.",
-  galerie,
+  legendes,
 };
 
 export default mopiet2026;
