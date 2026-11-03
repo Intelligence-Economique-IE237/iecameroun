@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+/* Couleurs et police reprises du site public (app/tailwind.config.js) */
+@theme {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+  --color-primary: #1b5e20;
+  --color-primary-hover: #124116;
+  --color-primary-bg: #e8f5e9;
+  --color-secondary: #b71c1c;
+  --color-secondary-bg: #ffebee;
+  --color-tertiary: #f9a825;
+  --color-tertiary-bg: #fffde7;
+
+  --color-page: #f6f7f6;
+  --color-heading: #111827;
+  --color-body: #4b5563;
+  --color-muted: #6b7280;
+  --color-line: #e5e7eb;
+}
+
+body {
+  @apply bg-page text-body antialiased;
+}
