@@ -18,7 +18,7 @@ const ActualiteCard = ({ actualite }) => {
                   src={image}
                   alt=""
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                  className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.04]"
               />
           ) : (
               <div className="flex h-full w-full items-center justify-center">

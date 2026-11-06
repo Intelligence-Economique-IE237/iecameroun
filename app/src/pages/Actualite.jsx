@@ -8,7 +8,7 @@ import ChargementLogo from "../components/ChargementLogo";
 import ContenuRiche from "../components/ContenuRiche";
 import ActualiteCard from "../components/ActualiteCard";
 import RevealOnScroll from "../components/RevealOnScroll";
-import { Conteneur } from "../components/ui";
+import { Conteneur, TraitAccent } from "../components/ui";
 import { Introuvable, compterLecture, dateLongue, getActualite, getActualites, urlFichier, useApi } from "../api";
 
 const Retour = () => (
@@ -118,6 +118,7 @@ const ALire = ({ slug }) => {
         <Conteneur>
           <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
+              <TraitAccent />
               <h2 className="m-0 text-[28px] font-bold leading-tight tracking-[-0.02em] text-heading sm:text-[34px]">À lire aussi</h2>
             </div>
             <Retour />
@@ -215,7 +216,8 @@ const Actualite = () => {
 
                   {image && (
                       <Conteneur>
-                        <img src={image} alt="" className="aspect-[16/9] w-full rounded-lg object-cover" />
+                        {/* Image entière, sans recadrage : les visuels (affiches, infographies) contiennent du texte */}
+                        <img src={image} alt="" className="mx-auto h-auto w-full max-w-[960px] rounded-lg border border-border" />
                       </Conteneur>
                   )}
 

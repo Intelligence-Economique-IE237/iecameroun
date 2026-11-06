@@ -7,7 +7,7 @@ import Footer from "../components/Footer";
 import ChargementLogo from "../components/ChargementLogo";
 import RevealOnScroll from "../components/RevealOnScroll";
 import ActualiteCard from "../components/ActualiteCard";
-import { Conteneur } from "../components/ui";
+import { Conteneur, TraitAccent } from "../components/ui";
 import { dateLongue, getActualites, urlFichier, useApi } from "../api";
 
 // La plus récente, en grand : image à gauche, texte à droite
@@ -20,7 +20,7 @@ const ALaUne = ({ actualite }) => {
       >
         <div className="aspect-[16/10] overflow-hidden bg-[#F1F4F1] lg:aspect-auto lg:min-h-[360px]">
           {image ? (
-              <img src={image} alt="" className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
+              <img src={image} alt="" className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
           ) : (
               <div className="grid h-full w-full place-items-center">
                 <img src="/logo-ie237.svg" alt="" className="h-20 w-20 opacity-50 grayscale" />
@@ -70,6 +70,7 @@ const Actualites = () => {
           <Conteneur className="pb-10 pt-14 sm:pt-20">
             <RevealOnScroll>
               <div className="max-w-2xl">
+                <TraitAccent />
                 <h1 className="m-0 text-[40px] font-bold leading-[1.06] tracking-[-0.03em] text-heading sm:text-[52px]">Actualités</h1>
                 <p className="m-0 mt-4 text-[17px] leading-7 text-body">
                   Activités, formations, partenariats et prises de position du Think-Do Tank IE237 et de ses experts.

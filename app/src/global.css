@@ -163,4 +163,5 @@ body {
   color: #0A0A0A;
 }
 .texte-riche a { color: #1B5E20; text-decoration: underline; text-underline-offset: 3px; }
+.texte-riche [style*="justify"] { hyphens: auto; }
 .texte-riche hr { border: 0; border-top: 1px solid #E5E7EB; margin: 2em 0; }
