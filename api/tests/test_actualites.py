@@ -72,3 +72,11 @@ def test_auteur_et_mise_en_forme(client, editeur):
 
     r = client.patch(f"/admin/actualites/{actu['id']}", headers=editeur, json={"contenu": "<p onclick='x()'>Ok</p>"})
     assert r.json()["contenu"] == "<p>Ok</p>"
+
+
+def test_alignement_garde_seul(client, editeur):
+    html = '<p style="text-align: justify; color: red">J</p><h2 style="text-align: center">T</h2><a style="position:fixed" href="https://x.cm">l</a>'
+    contenu = client.post("/admin/actualites", headers=editeur, json={"titre": "Alignement", "contenu": html}).json()["contenu"]
+    assert '<p style="text-align:justify">J</p>' in contenu
+    assert '<h2 style="text-align:center">T</h2>' in contenu
+    assert "color" not in contenu and "position" not in contenu

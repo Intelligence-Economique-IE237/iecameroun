@@ -10,7 +10,9 @@ BALISES = {
     "strong", "b", "em", "i", "u", "s",
     "ul", "ol", "li", "blockquote", "a", "code", "pre",
 }
-ATTRIBUTS = {"a": {"href", "title", "target"}}
+# Alignement (gauche, centré, droite, justifié) : seule la propriété CSS text-align est gardée
+ALIGNABLES = {"p", "h2", "h3", "h4"}
+ATTRIBUTS = {"a": {"href", "title", "target"}, **{balise: {"style"} for balise in ALIGNABLES}}
 
 
 def nettoyer_html(html: str) -> str:
@@ -20,4 +22,5 @@ def nettoyer_html(html: str) -> str:
         attributes=ATTRIBUTS,
         url_schemes={"http", "https", "mailto"},
         link_rel="noopener noreferrer",
+        filter_style_properties={"text-align"},
     ).strip()
