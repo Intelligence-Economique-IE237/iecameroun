@@ -3,7 +3,12 @@
 import { useEffect } from "react";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import TextAlign from "@tiptap/extension-text-align";
 import {
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
   Bold,
   Heading2,
   Heading3,
@@ -56,6 +61,7 @@ function BarreOutils({ editeur }) {
       numeros: e.isActive("orderedList"),
       citation: e.isActive("blockquote"),
       lien: e.isActive("link"),
+      aligne: ["center", "right", "justify"].find((a) => e.isActive({ textAlign: a })) || "left",
       annuler: e.can().undo(),
       refaire: e.can().redo(),
     }),
@@ -94,6 +100,22 @@ function BarreOutils({ editeur }) {
       <BoutonOutil titre="Barré" actif={etat.barre} onClick={() => c().toggleStrike().run()}>
         <Strikethrough className="size-4" />
       </BoutonOutil>
+      <Separateur />
+      {[
+        ["left", "Aligner à gauche", AlignLeft],
+        ["center", "Centrer", AlignCenter],
+        ["right", "Aligner à droite", AlignRight],
+        ["justify", "Justifier", AlignJustify],
+      ].map(([valeur, titre, Icone]) => (
+        <BoutonOutil
+          key={valeur}
+          titre={titre}
+          actif={etat.aligne === valeur}
+          onClick={() => (valeur === "left" ? c().unsetTextAlign().run() : c().setTextAlign(valeur).run())}
+        >
+          <Icone className="size-4" />
+        </BoutonOutil>
+      ))}
       <Separateur />
       <BoutonOutil titre="Liste à puces" actif={etat.puces} onClick={() => c().toggleBulletList().run()}>
         <List className="size-4" />
@@ -134,6 +156,8 @@ export default function EditeurTexte({ id, libelle, aide, valeur, onChange, haut
         codeBlock: false,
         link: { openOnClick: false, autolink: true, defaultProtocol: "https" },
       }),
+      // Alignement des paragraphes et titres (gauche par défaut, sans style ajouté)
+      TextAlign.configure({ types: ["heading", "paragraph"], alignments: ["left", "center", "right", "justify"], defaultAlignment: "left" }),
     ],
     content: valeur || "",
     editorProps: {
