@@ -9,8 +9,9 @@ export const FILTRES_STATUT = [
 export const filtrerParStatut = (elements, statut) =>
   elements.filter((e) => statut === "tous" || (statut === "publie" ? e.publie : !e.publie));
 
-// Recherche + filtre de statut, au-dessus des tableaux
-export default function BarreFiltres({ recherche, setRecherche, statut, setStatut, placeholder }) {
+// Recherche + filtre de statut, au-dessus des tableaux.
+// « filtres » remplace la liste par défaut : [{ valeur, libelle, nombre }]
+export default function BarreFiltres({ recherche, setRecherche, statut, setStatut, placeholder, filtres = FILTRES_STATUT }) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <label className="relative flex-1 sm:max-w-xs">
@@ -24,14 +25,19 @@ export default function BarreFiltres({ recherche, setRecherche, statut, setStatu
         />
       </label>
       {setStatut && (
-        <div className="inline-flex rounded-lg border border-line bg-gray-50 p-0.5">
-          {FILTRES_STATUT.map((f) => (
+        <div className="inline-flex max-w-full overflow-x-auto rounded-lg border border-line bg-gray-50 p-0.5">
+          {filtres.map((f) => (
             <button
               key={f.valeur}
               onClick={() => setStatut(f.valeur)}
-              className={`rounded-md px-3 py-1.5 text-sm ${statut === f.valeur ? "bg-white font-medium text-heading shadow-sm" : "text-body hover:text-heading"}`}
+              className={`inline-flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 text-sm ${statut === f.valeur ? "bg-white font-medium text-heading shadow-sm" : "text-body hover:text-heading"}`}
             >
               {f.libelle}
+              {f.nombre > 0 && (
+                <span className={`rounded-full px-1.5 text-xs ${statut === f.valeur ? "bg-primary-bg text-primary" : "bg-gray-200/70 text-body"}`}>
+                  {f.nombre}
+                </span>
+              )}
             </button>
           ))}
         </div>

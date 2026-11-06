@@ -16,7 +16,7 @@ import useChargement from "../../utils/useChargement";
 import { dateCourte } from "../../utils/format";
 
 export default function ListeLivrables() {
-  const { estAdmin } = useAuth();
+  const { estAdmin, peutGererLivrables } = useAuth();
   const navigate = useNavigate();
   const { donnees, setDonnees, chargement, erreur } = useChargement(() => livrablesApi.lister());
   const [recherche, setRecherche] = useState("");
@@ -52,9 +52,11 @@ export default function ListeLivrables() {
     <Page
       titre="Livrables"
       actions={
-        <Link to="/livrables/nouveau">
-          <Button icone={Plus}>Nouveau livrable</Button>
-        </Link>
+        peutGererLivrables && (
+          <Link to="/livrables/nouveau">
+            <Button icone={Plus}>Nouveau livrable</Button>
+          </Link>
+        )
       }
     >
       <Alerte>{erreur}</Alerte>

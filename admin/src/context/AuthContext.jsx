@@ -45,6 +45,9 @@ export function AuthProvider({ children }) {
       chargement,
       sessionExpiree,
       estAdmin: utilisateur?.role === "admin",
+      // Ce que le rôle permet (mêmes règles que l'API)
+      peutRediger: ["admin", "editeur"].includes(utilisateur?.role), // actualités et événements
+      peutGererLivrables: ["admin", "analyste"].includes(utilisateur?.role),
       connecter,
       deconnecter,
     }),

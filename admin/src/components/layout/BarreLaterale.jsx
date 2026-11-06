@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
-import { FileText, LayoutGrid, LogOut, Newspaper, PanelLeftClose, Users } from "lucide-react";
+import { CalendarDays, FileText, LayoutGrid, LogOut, Newspaper, PanelLeftClose, Users } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { ROLES, initiales } from "../../utils/format";
 
 const MENU = [
   { vers: "/", libelle: "Tableau de bord", icone: LayoutGrid, fin: true },
   { vers: "/actualites", libelle: "Actualités", icone: Newspaper },
+  { vers: "/evenements", libelle: "Événements", icone: CalendarDays },
   { vers: "/livrables", libelle: "Livrables", icone: FileText },
   { vers: "/utilisateurs", libelle: "Utilisateurs", icone: Users, adminSeulement: true },
 ];

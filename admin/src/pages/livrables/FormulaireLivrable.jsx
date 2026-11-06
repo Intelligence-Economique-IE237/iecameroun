@@ -26,7 +26,8 @@ export default function FormulaireLivrable() {
   const creation = !id;
   const navigate = useNavigate();
   const location = useLocation();
-  const { estAdmin } = useAuth();
+  const { estAdmin, peutGererLivrables } = useAuth();
+  const lectureSeule = !peutGererLivrables;
 
   const [livrable, setLivrable] = useState(null);
   const [form, setForm] = useState(VIDE);
@@ -99,7 +100,7 @@ export default function FormulaireLivrable() {
 
   return (
     <Page
-      titre={creation ? "Nouveau livrable" : "Modifier le livrable"}
+      titre={creation ? "Nouveau livrable" : lectureSeule ? "Livrable" : "Modifier le livrable"}
       actions={
         <Link to="/livrables">
           <Button variante="secondaire" icone={ArrowLeft}>
@@ -111,7 +112,10 @@ export default function FormulaireLivrable() {
       {location.state?.cree && !message.texte && <Alerte type="succes">Livrable créé.</Alerte>}
       <Alerte type={message.type}>{message.texte}</Alerte>
 
+      {lectureSeule && <Alerte type="info">Consultation seule : les livrables sont gérés par les analystes et l'Admin.</Alerte>}
+
       <form onSubmit={enregistrer} className="grid gap-5 lg:grid-cols-3">
+        <fieldset disabled={lectureSeule} className="contents">
         <div className="space-y-5 lg:col-span-2">
           <Carte titre="Informations">
             <div className="space-y-4">
@@ -208,9 +212,11 @@ export default function FormulaireLivrable() {
                 </div>
               </dl>
             )}
-            <Button type="submit" icone={Save} chargement={envoi} className="w-full">
-              {creation ? "Créer le livrable" : "Enregistrer"}
-            </Button>
+            {!lectureSeule && (
+              <Button type="submit" icone={Save} chargement={envoi} className="w-full">
+                {creation ? "Créer le livrable" : "Enregistrer"}
+              </Button>
+            )}
             {!creation && estAdmin && (
               <Button variante="fantome" icone={Trash2} className="w-full text-secondary hover:bg-secondary-bg" onClick={() => setConfirmer(true)}>
                 Supprimer
@@ -218,6 +224,7 @@ export default function FormulaireLivrable() {
             )}
           </div>
         </Carte>
+        </fieldset>
       </form>
 
       <Confirmation

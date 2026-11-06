@@ -22,3 +22,16 @@
 body {
   @apply bg-page text-body antialiased;
 }
+
+/* Texte mis en forme dans l'éditeur (même rendu que sur le site) */
+.texte-riche > * + * { margin-top: 0.75em; }
+.texte-riche h2 { font-size: 1.25rem; font-weight: 600; line-height: 1.3; margin-top: 1.25em; }
+.texte-riche h3 { font-size: 1.05rem; font-weight: 600; margin-top: 1em; }
+.texte-riche ul { list-style: disc; padding-left: 1.4em; }
+.texte-riche ol { list-style: decimal; padding-left: 1.4em; }
+.texte-riche li + li { margin-top: 0.25em; }
+.texte-riche li p { margin: 0; }
+.texte-riche blockquote { border-left: 3px solid var(--color-primary); padding-left: 1em; color: var(--color-body); font-style: italic; }
+.texte-riche a { color: var(--color-primary); text-decoration: underline; }
+.texte-riche hr { border: 0; border-top: 1px solid var(--color-line); margin: 1.25em 0; }
+.texte-riche p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: var(--color-muted); float: left; height: 0; pointer-events: none; }

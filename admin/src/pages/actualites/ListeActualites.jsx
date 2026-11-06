@@ -6,27 +6,43 @@ import { urlFichier } from "../../api/client";
 import { useAuth } from "../../context/AuthContext";
 import { Page } from "../../components/layout/Mise";
 import { Carte } from "../../components/ui/Carte";
-import { BadgeStatut } from "../../components/ui/Badge";
+import { BadgeEtape } from "../../components/ui/Badge";
 import Alerte from "../../components/ui/Alerte";
 import Button from "../../components/ui/Button";
-import BarreFiltres, { correspond, filtrerParStatut } from "../../components/ui/BarreFiltres";
+import BarreFiltres, { correspond } from "../../components/ui/BarreFiltres";
 import { Confirmation } from "../../components/ui/Fenetre";
 import { Cellule, EtatVide, Pagination, Tableau, usePagination } from "../../components/ui/Tableau";
 import useChargement from "../../utils/useChargement";
-import { dateCourte } from "../../utils/format";
+import { STATUTS, dateCourte, nombre } from "../../utils/format";
 
 export default function ListeActualites() {
-  const { estAdmin } = useAuth();
+  const { estAdmin, peutRediger, utilisateur } = useAuth();
   const navigate = useNavigate();
   const { donnees, setDonnees, chargement, erreur } = useChargement(() => actualitesApi.lister());
   const [recherche, setRecherche] = useState("");
-  const [statut, setStatut] = useState("tous");
+  // L'Analyste arrive directement sur les articles à valider
+  const [statut, setStatut] = useState(utilisateur?.role === "analyste" ? "soumis" : "tous");
+
+  const filtres = useMemo(
+    () => [
+      { valeur: "tous", libelle: "Toutes" },
+      ...["soumis", "a_corriger", "brouillon", "valide", "publie"].map((s) => ({
+        valeur: s,
+        libelle: STATUTS[s].libelle,
+        nombre: (donnees || []).filter((a) => a.statut === s).length,
+      })),
+    ],
+    [donnees],
+  );
   const [aSupprimer, setASupprimer] = useState(null);
   const [suppression, setSuppression] = useState(false);
   const [message, setMessage] = useState({ type: "", texte: "" });
 
   const filtrees = useMemo(
-    () => filtrerParStatut(donnees || [], statut).filter((a) => correspond(`${a.titre} ${a.resume}`, recherche)),
+    () =>
+      (donnees || [])
+        .filter((a) => statut === "tous" || a.statut === statut)
+        .filter((a) => correspond(`${a.titre} ${a.resume} ${a.auteur}`, recherche)),
     [donnees, statut, recherche],
   );
   const pagination = usePagination(filtrees);
@@ -49,9 +65,11 @@ export default function ListeActualites() {
     <Page
       titre="Actualités"
       actions={
-        <Link to="/actualites/nouvelle">
-          <Button icone={Plus}>Nouvelle actualité</Button>
-        </Link>
+        peutRediger && (
+          <Link to="/actualites/nouvelle">
+            <Button icone={Plus}>Nouvelle actualité</Button>
+          </Link>
+        )
       }
     >
       <Alerte>{erreur}</Alerte>
@@ -68,6 +86,7 @@ export default function ListeActualites() {
             setRecherche={setRecherche}
             statut={statut}
             setStatut={setStatut}
+            filtres={filtres}
             placeholder="Rechercher une actualité"
           />
         </div>
@@ -75,10 +94,16 @@ export default function ListeActualites() {
         {pagination.visibles.length === 0 ? (
           <EtatVide
             chargement={chargement}
-            message={donnees?.length ? "Aucune actualité ne correspond à la recherche." : "Aucune actualité pour le moment."}
+            message={
+              !donnees?.length
+                ? "Aucune actualité pour le moment."
+                : statut === "soumis" && !recherche
+                  ? "Aucun article en attente de validation."
+                  : "Aucune actualité ne correspond à la recherche."
+            }
           />
         ) : (
-          <Tableau colonnes={["Actualité", "Statut", "Publiée le", "Modifiée le", ""]}>
+          <Tableau colonnes={["Actualité", "Auteur", "Étape", "Lectures", "Publiée le", "Modifiée le", ""]}>
             {pagination.visibles.map((a) => (
               <tr key={a.id} className="cursor-pointer hover:bg-gray-50" onClick={() => navigate(`/actualites/${a.id}`)}>
                 <Cellule>
@@ -96,14 +121,16 @@ export default function ListeActualites() {
                     </div>
                   </div>
                 </Cellule>
+                <Cellule className="whitespace-nowrap text-body">{a.auteur || "—"}</Cellule>
                 <Cellule>
-                  <BadgeStatut publie={a.publie} />
+                  <BadgeEtape statut={a.statut} />
                 </Cellule>
+                <Cellule className="whitespace-nowrap tabular-nums text-body">{a.publie_le ? nombre(a.lectures) : "—"}</Cellule>
                 <Cellule className="whitespace-nowrap text-body">{dateCourte(a.publie_le)}</Cellule>
                 <Cellule className="whitespace-nowrap text-body">{dateCourte(a.modifie_le)}</Cellule>
                 <Cellule>
                   <div className="flex justify-end gap-1" onClick={(e) => e.stopPropagation()}>
-                    <Link to={`/actualites/${a.id}`} className="rounded-md p-2 text-muted hover:bg-gray-100 hover:text-heading" title="Modifier">
+                    <Link to={`/actualites/${a.id}`} className="rounded-md p-2 text-muted hover:bg-gray-100 hover:text-heading" title="Ouvrir">
                       <Pencil className="size-4" />
                     </Link>
                     {estAdmin && (

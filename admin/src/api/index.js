@@ -14,6 +14,26 @@ export const actualitesApi = {
   modifier: (id, donnees) => requete(`/admin/actualites/${id}`, { methode: "PATCH", json: donnees }),
   supprimer: (id) => requete(`/admin/actualites/${id}`, { methode: "DELETE" }),
   envoyerImage: (id, fichier) => requete(`/admin/actualites/${id}/image`, { methode: "POST", fichier }),
+  // action : soumettre, valider, renvoyer, publier, retirer
+  changerStatut: (id, action, commentaire = "") =>
+    requete(`/admin/actualites/${id}/statut`, { methode: "POST", json: { action, commentaire } }),
+  lectures: (id) => requete(`/admin/actualites/${id}/lectures`),
+  statistiques: () => requete("/admin/actualites/statistiques"),
+};
+
+export const evenementsApi = {
+  lister: () => requete("/admin/evenements"),
+  lire: (id) => requete(`/admin/evenements/${id}`),
+  creer: (donnees) => requete("/admin/evenements", { methode: "POST", json: donnees }),
+  modifier: (id, donnees) => requete(`/admin/evenements/${id}`, { methode: "PATCH", json: donnees }),
+  supprimer: (id) => requete(`/admin/evenements/${id}`, { methode: "DELETE" }),
+  envoyerCouverture: (id, fichier) => requete(`/admin/evenements/${id}/couverture`, { methode: "POST", fichier }),
+  envoyerDocument: (id, fichier) => requete(`/admin/evenements/${id}/document`, { methode: "POST", fichier }),
+  retirerDocument: (id) => requete(`/admin/evenements/${id}/document`, { methode: "DELETE" }),
+  ajouterPhoto: (id, fichier) => requete(`/admin/evenements/${id}/photos`, { methode: "POST", fichier }),
+  legenderPhoto: (id, photoId, legende) =>
+    requete(`/admin/evenements/${id}/photos/${photoId}`, { methode: "PATCH", json: { legende } }),
+  supprimerPhoto: (id, photoId) => requete(`/admin/evenements/${id}/photos/${photoId}`, { methode: "DELETE" }),
 };
 
 export const livrablesApi = {

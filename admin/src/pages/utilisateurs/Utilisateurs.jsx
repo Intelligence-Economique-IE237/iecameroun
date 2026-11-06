@@ -15,7 +15,8 @@ import useChargement from "../../utils/useChargement";
 import { ROLES, initiales } from "../../utils/format";
 
 const OPTIONS_ROLES = [
-  { valeur: "editeur", libelle: "Éditeur : crée et publie le contenu" },
+  { valeur: "editeur", libelle: "Éditeur : rédige, publie après validation, gère les événements" },
+  { valeur: "analyste", libelle: "Analyste : valide les actualités, gère les livrables" },
   { valeur: "admin", libelle: "Admin : tout, y compris suppressions et comptes" },
 ];
 
@@ -163,7 +164,7 @@ export default function Utilisateurs() {
                 </Cellule>
                 <Cellule className="text-body">{u.email}</Cellule>
                 <Cellule>
-                  <Badge ton={u.role === "admin" ? "rouge" : "vert"}>{ROLES[u.role]}</Badge>
+                  <Badge ton={{ admin: "rouge", analyste: "bleu" }[u.role] || "vert"}>{ROLES[u.role]}</Badge>
                 </Cellule>
                 <Cellule>
                   <div className="flex justify-end gap-1">

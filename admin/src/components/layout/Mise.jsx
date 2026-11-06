@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Outlet, useOutletContext } from "react-router-dom";
-import { Menu } from "lucide-react";
+import { Loader2, Menu } from "lucide-react";
 import BarreLaterale from "./BarreLaterale";
 
 // Structure commune : barre latérale fixe + contenu de la page
@@ -10,7 +10,15 @@ export default function Mise() {
     <div className="min-h-screen">
       <BarreLaterale ouverte={menuOuvert} onFermer={() => setMenuOuvert(false)} />
       <div className="lg:pl-64">
-        <Outlet context={{ ouvrirMenu: () => setMenuOuvert(true) }} />
+        <Suspense
+          fallback={
+            <div className="grid min-h-60 place-items-center">
+              <Loader2 className="size-6 animate-spin text-primary" />
+            </div>
+          }
+        >
+          <Outlet context={{ ouvrirMenu: () => setMenuOuvert(true) }} />
+        </Suspense>
       </div>
     </div>
   );
