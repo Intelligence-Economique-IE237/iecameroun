@@ -11,6 +11,8 @@ import Evenements from "./pages/Evenements";
 import Evenement from "./pages/Evenement";
 import Actualites from "./pages/Actualites";
 import Actualite from "./pages/Actualite";
+import MentionsLegales from "./pages/MentionsLegales";
+import Confidentialite from "./pages/Confidentialite";
 
 function App() {
   const action = useNavigationType();
@@ -55,6 +57,8 @@ function App() {
       <Route path="/evenements/:slug" element={<Evenement />} />
       <Route path="/actualites" element={<Actualites />} />
       <Route path="/actualites/:slug" element={<Actualite />} />
+      <Route path="/mentions-legales" element={<MentionsLegales />} />
+      <Route path="/politique-de-confidentialite" element={<Confidentialite />} />
       {/* Ancienne adresse de la page MOPIET */}
       <Route path="/mopiet-2026" element={<Navigate to="/evenements/mopiet-2026" replace />} />
     </Routes>

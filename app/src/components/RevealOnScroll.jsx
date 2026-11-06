@@ -1,47 +1,47 @@
 import { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
 
-const RevealOnScroll = ({ children, delay = 0 }) => {
-    const ref = useRef(null);
-    const [visible, setVisible] = useState(false);
+// Fait apparaître son contenu en douceur quand il entre dans l'écran (une seule fois).
+// delay en ms pour décaler les éléments d'une même grille.
+const RevealOnScroll = ({ children, delay = 0, className = "" }) => {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setVisible(true);
-                    observer.disconnect();
-                }
-            },
-            {
-                threshold: 0.15,
-            }
-        );
-
-        if (ref.current) {
-            observer.observe(ref.current);
-        }
-
-        return () => observer.disconnect();
-    }, []);
-
-    return (
-        <div
-            ref={ref}
-            style={{
-                transitionDelay: `${delay}ms`,
-            }}
-            className={`
-        transition-all duration-700 ease-out
-        ${
-                visible
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-            }
-      `}
-        >
-            {children}
-        </div>
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return undefined;
+    if (!("IntersectionObserver" in window)) {
+      setVisible(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setVisible(true);
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -6% 0px" },
     );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+      <div
+          ref={ref}
+          style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+          className={`revele ${visible ? "revele--visible" : ""} ${className}`}
+      >
+        {children}
+      </div>
+  );
+};
+
+RevealOnScroll.propTypes = {
+  children: PropTypes.node,
+  delay: PropTypes.number,
+  className: PropTypes.string,
 };
 
 export default RevealOnScroll;

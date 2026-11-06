@@ -1,12 +1,53 @@
 import { useEffect } from "react";
-import { Loader2, Newspaper } from "lucide-react";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import { ArrowRight, Newspaper } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import ChargementLogo from "../components/ChargementLogo";
 import RevealOnScroll from "../components/RevealOnScroll";
 import ActualiteCard from "../components/ActualiteCard";
-import { getActualites, useApi } from "../api";
+import { Conteneur } from "../components/ui";
+import { dateLongue, getActualites, urlFichier, useApi } from "../api";
 
-const SECTION_X = "px-5 sm:px-10 lg:px-24 xl:px-36";
+// La plus récente, en grand : image à gauche, texte à droite
+const ALaUne = ({ actualite }) => {
+  const image = urlFichier(actualite.image);
+  return (
+      <Link
+          to={`/actualites/${actualite.slug}`}
+          className="group grid overflow-hidden rounded-lg border border-border bg-white no-underline transition-colors hover:border-primary/50 lg:grid-cols-[1.25fr_1fr]"
+      >
+        <div className="aspect-[16/10] overflow-hidden bg-[#F1F4F1] lg:aspect-auto lg:min-h-[360px]">
+          {image ? (
+              <img src={image} alt="" className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
+          ) : (
+              <div className="grid h-full w-full place-items-center">
+                <img src="/logo-ie237.svg" alt="" className="h-20 w-20 opacity-50 grayscale" />
+              </div>
+          )}
+        </div>
+        <div className="flex flex-col justify-center gap-4 p-6 sm:p-10">
+          <span className="inline-flex w-fit items-center gap-2 rounded-full bg-tertiary/15 px-3 py-1 text-[12px] font-semibold text-heading">
+            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-tertiary" />À la une
+          </span>
+          <h2 className="m-0 text-[24px] font-bold leading-[1.2] tracking-[-0.02em] text-heading transition-colors group-hover:text-primary sm:text-[30px]">
+            {actualite.titre}
+          </h2>
+          {actualite.resume && <p className="m-0 line-clamp-4 text-[16px] leading-7 text-body">{actualite.resume}</p>}
+          <p className="m-0 text-[13px] text-muted">
+            {dateLongue(actualite.publie_le)}
+            {actualite.auteur && ` · Par ${actualite.auteur}`}
+          </p>
+          <span className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-primary">
+            Lire l&apos;article <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </span>
+        </div>
+      </Link>
+  );
+};
+
+ALaUne.propTypes = { actualite: ActualiteCard.propTypes.actualite };
 
 const Actualites = () => {
   const { donnees: actualites, chargement, erreur } = useApi(getActualites, "liste");
@@ -19,64 +60,66 @@ const Actualites = () => {
     }
   }, []);
 
+  const [premiere, ...suivantes] = actualites || [];
+
   return (
       <div className="w-full min-h-screen overflow-x-hidden bg-background">
-        <div className="mx-auto w-full max-w-[1440px]">
-          <Header hero={false} />
+        <Header hero={false} />
 
-          <main className="w-full text-body font-[Poppins]">
-            <section className={`relative bg-surface ${SECTION_X} py-12 sm:py-16 lg:py-20`}>
-              <img
-                  className="absolute left-0 top-0 w-48 sm:w-72 lg:w-[420px] opacity-40 pointer-events-none"
-                  alt=""
-                  src="/Ellipse-737.svg"
-              />
-              <RevealOnScroll>
-                <div className="relative flex max-w-3xl flex-col gap-3">
-                  <span className="text-sm uppercase tracking-[0.2em] font-semibold text-primary">Actualités</span>
-                  <h1 className="m-0 font-[Manrope] text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-[-0.03em] text-heading">
-                    Nos actualités
-                  </h1>
-                  <div className="h-1 w-16 rounded-full bg-primary" />
-                  <p className="m-0 text-lg sm:text-xl leading-8 text-body">
-                    Activités, formations et prises de position du Think-Do Tank IE237.
+        <main className="w-full text-body">
+          <Conteneur className="pb-10 pt-14 sm:pt-20">
+            <RevealOnScroll>
+              <div className="max-w-2xl">
+                <h1 className="m-0 text-[40px] font-bold leading-[1.06] tracking-[-0.03em] text-heading sm:text-[52px]">Actualités</h1>
+                <p className="m-0 mt-4 text-[17px] leading-7 text-body">
+                  Activités, formations, partenariats et prises de position du Think-Do Tank IE237 et de ses experts.
+                </p>
+              </div>
+            </RevealOnScroll>
+          </Conteneur>
+
+          <Conteneur className="pb-20">
+            {chargement && (
+                <div className="flex justify-center py-16">
+                  <ChargementLogo libelle="Chargement des actualités" />
+                </div>
+            )}
+
+            {!chargement && (erreur || !actualites?.length) && (
+                <div className="flex flex-col items-center gap-3 rounded-lg border border-border px-6 py-16 text-center">
+                  <Newspaper className="h-10 w-10 text-primary" />
+                  <p className="m-0 text-base text-body">
+                    {erreur
+                        ? "Les actualités ne peuvent pas être chargées pour le moment. Réessayez dans quelques instants."
+                        : "Aucune actualité publiée pour le moment."}
                   </p>
                 </div>
-              </RevealOnScroll>
-            </section>
+            )}
 
-            <section className={`${SECTION_X} py-12 sm:py-16`}>
-              {chargement && (
-                  <div className="flex justify-center py-16">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" aria-label="Chargement" />
-                  </div>
-              )}
+            {premiere && (
+                <RevealOnScroll>
+                  <ALaUne actualite={premiere} />
+                </RevealOnScroll>
+            )}
 
-              {!chargement && (erreur || !actualites?.length) && (
-                  <div className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-surface px-6 py-16 text-center">
-                    <Newspaper className="h-10 w-10 text-primary" />
-                    <p className="m-0 text-base text-body">
-                      {erreur
-                          ? "Les actualités ne peuvent pas être chargées pour le moment. Réessayez dans quelques instants."
-                          : "Aucune actualité publiée pour le moment."}
-                    </p>
-                  </div>
-              )}
-
-              {!!actualites?.length && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {actualites.map((a, i) => (
-                        <RevealOnScroll key={a.id} delay={(i % 3) * 120}>
+            {suivantes.length > 0 && (
+                <>
+                  <h2 className="m-0 mb-6 mt-16 text-[13px] font-semibold uppercase tracking-[0.12em] text-muted">
+                    Toutes les actualités
+                  </h2>
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {suivantes.map((a, i) => (
+                        <RevealOnScroll key={a.id} delay={(i % 3) * 100} className="h-full">
                           <ActualiteCard actualite={a} />
                         </RevealOnScroll>
                     ))}
                   </div>
-              )}
-            </section>
-          </main>
+                </>
+            )}
+          </Conteneur>
+        </main>
 
-          <Footer />
-        </div>
+        <Footer />
       </div>
   );
 };

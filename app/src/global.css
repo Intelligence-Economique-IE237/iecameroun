@@ -1,17 +1,17 @@
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Manrope:ital,wght@0,500;0,700;0,800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Prosto+One:ital,wght@0,400&display=swap");
 @layer theme, base, components, utilities;
 @config "../tailwind.config.js";
 
+html {
+  background-color: #ffffff;
+}
+/* Une seule police sur tout le site : Inter (texte et titres) */
 body {
-  @apply leading-[normal] m-0;
+  @apply leading-[normal] m-0 bg-background text-body antialiased;
+  background-color: #ffffff;
+  font-feature-settings: "cv11", "ss01";
 }
 @layer base {
   *,
@@ -37,3 +37,130 @@ body {
 .animate-scroll-right {
   animation: scroll-right 25s linear infinite;
 }
+
+/* =========================================================
+   Animations du site (sobres, désactivées si l'utilisateur
+   a demandé à réduire les animations dans son système)
+   ========================================================= */
+:root {
+  --ease-sortie: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Entrée de l'ouverture de l'accueil (déclenchée au chargement) */
+@keyframes entree {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes entree-image {
+  from { opacity: 0; transform: scale(1.04); }
+  to { opacity: 1; transform: none; }
+}
+.anim-entree { animation: entree 0.9s var(--ease-sortie) both; }
+.anim-entree-image { animation: entree-image 1.2s var(--ease-sortie) both; }
+
+/* Apparition au défilement (voir RevealOnScroll) */
+.revele {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s var(--ease-sortie), transform 0.8s var(--ease-sortie);
+}
+.revele--visible { opacity: 1; transform: none; }
+
+/* Logo de chargement */
+@keyframes rotation { to { transform: rotate(360deg); } }
+@keyframes respiration { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.94); } }
+.anim-rotation { animation: rotation 1.1s linear infinite; }
+.anim-respiration { animation: respiration 1.8s ease-in-out infinite; }
+
+/* Bandeau de logos qui défile : pause au survol */
+.defilement:hover .animate-scroll-left,
+.defilement:hover .animate-scroll-right { animation-play-state: paused; }
+.defilement {
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* Ouverture/fermeture fluide des offres (navigateurs récents ; sinon ouverture directe) */
+@supports (interpolate-size: allow-keywords) {
+  :root { interpolate-size: allow-keywords; }
+  details.depliant::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition: block-size 0.35s var(--ease-sortie), content-visibility 0.35s allow-discrete;
+  }
+  details.depliant[open]::details-content { block-size: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-entree, .anim-entree-image, .anim-rotation, .anim-respiration,
+  .animate-scroll-left, .animate-scroll-right { animation: none !important; }
+  .revele { opacity: 1; transform: none; transition: none; }
+  details.depliant::details-content { transition: none; }
+}
+
+/* Points des courbes économiques (HTML pour rester ronds quand la courbe s'étire) */
+.courbe-point {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 9999px;
+  background: var(--couleur, #1b5e20);
+  box-shadow: 0 0 0 2px #ffffff;
+  pointer-events: none;
+}
+@keyframes courbe-pulse {
+  0% { box-shadow: 0 0 0 2px #fff, 0 0 0 2px color-mix(in srgb, var(--couleur, #1b5e20) 45%, transparent); }
+  100% { box-shadow: 0 0 0 2px #fff, 0 0 0 12px color-mix(in srgb, var(--couleur, #1b5e20) 0%, transparent); }
+}
+.courbe-point--pulse { animation: courbe-pulse 2s ease-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .courbe-point--pulse { animation: none; }
+}
+
+/* Surlignage jaune sous « républicain » : se déploie à l'ouverture */
+@keyframes surlignage {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.surlignage {
+  transform-origin: left center;
+  animation: surlignage 0.8s var(--ease-sortie) 0.5s both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .surlignage { animation: none; }
+}
+
+
+/* Diaporama de l'ouverture : léger zoom lent sur la photo affichée */
+@keyframes diapo-zoom {
+  from { transform: scale(1.06); }
+  to { transform: scale(1); }
+}
+.diapo--active { animation: diapo-zoom 7s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .diapo--active { animation: none; }
+}
+
+/* Texte mis en forme depuis le panneau admin (actualités, présentation des événements) */
+.texte-riche { color: #4B4B4B; }
+.texte-riche > * { margin: 0; }
+.texte-riche > * + * { margin-top: 1.1em; }
+.texte-riche h2 { margin-top: 1.8em; font-weight: 700; font-size: 1.5rem; line-height: 1.3; color: #0A0A0A; }
+.texte-riche h3 { margin-top: 1.5em; font-weight: 700; font-size: 1.2rem; line-height: 1.35; color: #0A0A0A; }
+.texte-riche h4 { margin-top: 1.4em; font-size: 1.05rem; font-weight: 700; color: #0A0A0A; }
+.texte-riche strong, .texte-riche b { color: #0A0A0A; font-weight: 600; }
+.texte-riche ul, .texte-riche ol { padding-left: 1.4em; }
+.texte-riche ul { list-style: disc; }
+.texte-riche ol { list-style: decimal; }
+.texte-riche li + li { margin-top: 0.4em; }
+.texte-riche li::marker { color: #1B5E20; }
+.texte-riche li > p { margin: 0; }
+.texte-riche blockquote {
+  border-left: 3px solid #F9A825;
+  padding: 0.2em 0 0.2em 1.1em;
+  font-size: 1.1em;
+  font-style: italic;
+  color: #0A0A0A;
+}
+.texte-riche a { color: #1B5E20; text-decoration: underline; text-underline-offset: 3px; }
+.texte-riche hr { border: 0; border-top: 1px solid #E5E7EB; margin: 2em 0; }

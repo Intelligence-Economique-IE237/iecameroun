@@ -15,6 +15,10 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RevealOnScroll from "../components/RevealOnScroll";
 import EventGallery from "../components/EventGallery";
+import ChargementLogo from "../components/ChargementLogo";
+import ContenuRiche from "../components/ContenuRiche";
+import { getEvenementApi, useApi } from "../api";
+import { depuisApi } from "../data/evenements/depuisApi";
 import {
   getEvenement,
   statutEvenement,
@@ -32,9 +36,9 @@ const ICONS = {
 const NOMBRES = ["Zéro", "Un", "Deux", "Trois", "Quatre", "Cinq", "Six", "Sept", "Huit", "Neuf", "Dix"];
 
 const KIND_BADGE = {
-  module: { label: "Module", className: "bg-primary-bg text-primary" },
-  exercice: { label: "Exercice pratique", className: "bg-tertiary-bg text-tertiary-hover border border-tertiary-soft" },
-  officiel: { label: "Officiel", className: "bg-secondary-bg text-secondary" },
+  module: { label: "Module", className: "border border-primary/30 bg-white text-primary" },
+  exercice: { label: "Exercice pratique", className: "border border-tertiary/50 bg-white text-tertiary-hover" },
+  officiel: { label: "Officiel", className: "border border-secondary/30 bg-white text-secondary" },
 };
 
 // "Module 4 – Volet offensif de l'IET : détection…" → { numero, titre, detail }
@@ -45,13 +49,13 @@ const parseModule = (activity) => {
   return { numero: Number(match[1]), titre, detail: rest.join(" : ") };
 };
 
-const SECTION_X = "px-5 sm:px-10 lg:px-24 xl:px-36";
+const SECTION_X = "mx-auto w-full max-w-[1080px] px-5 sm:px-8";
 
 const SectionTitle = ({ kicker, title, className = "mb-8" }) => (
     <RevealOnScroll>
       <div className={`flex flex-col gap-3 max-w-[720px] ${className}`}>
-        <span className="text-sm uppercase tracking-[0.2em] font-semibold text-primary">{kicker}</span>
-        <h2 className="m-0 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-heading">{title}</h2>
+        <span className="text-[12px] font-medium uppercase tracking-[0.08em] text-muted">{kicker}</span>
+        <h2 className="m-0 text-[28px] sm:text-[36px] font-medium tracking-[-0.03em] text-heading">{title}</h2>
       </div>
     </RevealOnScroll>
 );
@@ -64,7 +68,13 @@ SectionTitle.propTypes = {
 
 const Evenement = () => {
   const { slug } = useParams();
-  const evt = getEvenement(slug);
+  const statique = getEvenement(slug);
+  // Les événements créés depuis le panneau admin viennent de l'API
+  const { donnees, chargement } = useApi(
+      () => (statique ? Promise.resolve(null) : getEvenementApi(slug).then(depuisApi)),
+      slug,
+  );
+  const evt = statique ?? donnees;
 
   useEffect(() => {
     if (!evt) return;
@@ -73,6 +83,16 @@ const Evenement = () => {
     if (meta && evt.resume) meta.content = evt.resume;
   }, [evt]);
 
+  if (!evt && chargement) {
+    return (
+        <div className="w-full min-h-screen bg-background">
+          <Header hero={false} />
+          <div className="flex justify-center py-32">
+            <ChargementLogo libelle="Chargement de l'événement" />
+          </div>
+        </div>
+    );
+  }
   if (!evt) return <Navigate to="/evenements" replace />;
 
   return <EvenementContenu key={evt.slug} evt={evt} />;
@@ -118,14 +138,9 @@ const EvenementContenu = ({ evt }) => {
         <div className="mx-auto w-full max-w-[1440px]">
           <Header hero={false} />
 
-          <main className="w-full text-body font-[Poppins]">
+          <main className="w-full text-body">
             {/* En-tête */}
-            <section className={`relative bg-surface ${SECTION_X} py-12 sm:py-16 lg:py-20`}>
-              <img
-                  className="absolute left-0 top-0 w-48 sm:w-72 lg:w-[420px] opacity-40 pointer-events-none"
-                  alt=""
-                  src="/Ellipse-737.svg"
-              />
+            <section className={`relative ${SECTION_X} py-12 sm:py-16 lg:py-20`}>
 
               <div className="relative flex flex-col gap-6 max-w-5xl">
                 <RevealOnScroll>
@@ -158,22 +173,21 @@ const EvenementContenu = ({ evt }) => {
                 <RevealOnScroll delay={160}>
                   <div className="flex flex-col gap-3">
                     {evt.theme && (
-                        <span className="text-sm uppercase tracking-[0.2em] font-semibold text-primary">
+                        <span className="text-[12px] font-medium uppercase tracking-[0.08em] text-muted">
                           {evt.theme}
                         </span>
                     )}
-                    <h1 className="m-0 font-[Manrope] text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-[-0.03em] text-heading">
+                    <h1 className="m-0 text-[40px] sm:text-[52px] font-bold leading-[1.06] tracking-[-0.035em] text-heading">
                       {evt.sigle}
                     </h1>
-                    <div className="h-1 w-16 rounded-full bg-primary" />
-                    <p className="m-0 max-w-3xl text-lg sm:text-xl leading-8 text-body">{evt.titre}</p>
+                    <p className="m-0 max-w-3xl text-[17px] leading-7 text-body">{evt.titre}</p>
                   </div>
                 </RevealOnScroll>
 
                 <dl className="m-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-4">
                   {infos.map(({ icon: Icon, label, value }, i) => (
                       <RevealOnScroll key={label} delay={240 + i * 80}>
-                        <div className="h-full flex items-start gap-3 rounded-2xl border border-border bg-background p-4">
+                        <div className="h-full flex items-start gap-3 rounded-lg border border-border bg-background p-4">
                           <Icon className="h-5 w-5 shrink-0 text-primary mt-0.5" />
                           <div className="flex flex-col gap-0.5">
                             <dt className="text-xs font-bold uppercase tracking-wide text-heading">{label}</dt>
@@ -199,14 +213,32 @@ const EvenementContenu = ({ evt }) => {
               </div>
             </section>
 
+            {evt.couverture && (
+                <div className={SECTION_X}>
+                  <RevealOnScroll>
+                    <img src={evt.couverture} alt="" className="aspect-[21/9] w-full rounded-lg object-cover" />
+                  </RevealOnScroll>
+                </div>
+            )}
+
+            {/* Présentation (texte mis en forme depuis le panneau admin) */}
+            {evt.description && (
+                <section className={`${SECTION_X} py-12`}>
+                  <SectionTitle kicker="Présentation" title="L'événement en bref" />
+                  <RevealOnScroll>
+                    <ContenuRiche html={evt.description} className="max-w-3xl text-[17px] leading-[1.8]" />
+                  </RevealOnScroll>
+                </section>
+            )}
+
             {/* Chiffres clés */}
             {chiffres.length > 0 && (
                 <section className={`${SECTION_X} py-12`}>
                   <div className={`grid grid-cols-1 gap-4 ${chiffres.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
                     {chiffres.map((c, i) => (
                         <RevealOnScroll key={c.label} delay={i * 120}>
-                          <div className="rounded-2xl border border-border bg-surface p-6 text-center transition-all duration-300 hover:border-primary hover:shadow-md">
-                            <p className="m-0 font-[Manrope] text-4xl sm:text-5xl font-extrabold text-primary">{c.value}</p>
+                          <div className="rounded-lg border border-border bg-surface p-6 text-center transition-all duration-300 hover:border-heading hover:">
+                            <p className="m-0 text-4xl sm:text-5xl font-extrabold text-primary">{c.value}</p>
                             <p className="m-0 mt-2 text-sm uppercase tracking-wide font-semibold text-heading">{c.label}</p>
                           </div>
                         </RevealOnScroll>
@@ -238,10 +270,10 @@ const EvenementContenu = ({ evt }) => {
                                     aria-selected={selected}
                                     aria-controls="panel-jour"
                                     onClick={() => setActive(i)}
-                                    className={`shrink-0 cursor-pointer rounded-2xl border px-5 py-3 text-left transition-all duration-250 ${
+                                    className={`shrink-0 cursor-pointer rounded-lg border px-5 py-3 text-left transition-all duration-250 ${
                                         selected
-                                            ? "border-primary bg-primary text-surface shadow-md"
-                                            : "border-border bg-surface text-heading hover:border-primary"
+                                            ? "border-primary bg-primary text-surface"
+                                            : "border-border bg-surface text-heading hover:border-heading"
                                     }`}
                                 >
                                   <span className={`block text-xs font-bold uppercase tracking-wide ${selected ? "text-primary-soft" : "text-primary"}`}>
@@ -260,7 +292,7 @@ const EvenementContenu = ({ evt }) => {
                       id="panel-jour"
                       role="tabpanel"
                       aria-labelledby={jours.length > 1 ? `tab-jour-${jour.numero}` : undefined}
-                      className="mt-6 rounded-2xl border border-border bg-surface p-5 sm:p-8 lg:p-10 shadow-sm"
+                      className="mt-6 rounded-lg border border-border bg-surface p-5 sm:p-8 lg:p-10"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 pb-6 border-b border-border">
                       <div>
@@ -314,7 +346,7 @@ const EvenementContenu = ({ evt }) => {
                               if (!m) return null;
                               return (
                                   <RevealOnScroll key={n} delay={i * 120}>
-                                    <article className="h-full flex flex-col gap-3 rounded-2xl border border-border bg-surface p-6 transition-all duration-300 hover:border-primary hover:shadow-md">
+                                    <article className="h-full flex flex-col gap-3 rounded-lg border border-border bg-surface p-6 transition-all duration-300 hover:border-heading hover:">
                                       <div className="flex items-center justify-between gap-3">
                                         <span className="text-sm font-bold text-primary">
                                           Module {String(m.numero).padStart(2, "0")} —
@@ -337,7 +369,7 @@ const EvenementContenu = ({ evt }) => {
 
                   {evt.certification && (
                       <RevealOnScroll>
-                        <div className="mt-12 rounded-xl bg-tertiary-bg border border-tertiary-soft p-5 sm:p-6">
+                        <div className="mt-12 rounded-lg border border-border bg-white p-5 sm:p-6">
                           <h3 className="m-0 text-sm font-bold uppercase tracking-wide text-primary">Certification</h3>
                           <p className="m-0 mt-2 text-base text-body">{evt.certification}</p>
                         </div>

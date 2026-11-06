@@ -8,19 +8,19 @@ module.exports = {
         // =========================
         // Identité IE237
         // =========================
-        primary: "#1B5E20",          // Vert institutionnel
+        primary: "#386641",          // Vert institutionnel
         "primary-hover": "#124116",  // Hover
         "primary-light": "#66BB6A",  // Accent léger
         "primary-soft": "#A5D6A7",   // Fonds légers
         "primary-bg": "#E8F5E9",     // Sections
 
-        secondary: "#B71C1C",          // Rouge secondaire
+        secondary: "#BC4749",          // Rouge secondaire
         "secondary-hover": "#8E1414",  // Hover
         "secondary-light": "#EF5350",  // Accent léger
         "secondary-soft": "#EF9A9A",   // Fonds légers
         "secondary-bg": "#FFEBEE",     // Sections
 
-        tertiary: "#F9A825",           // Jaune
+        tertiary: "#F2E8CF",           // Jaune tertiaire
         "tertiary-hover": "#F57F17",   // Hover
         "tertiary-light": "#FFEE58",   // Accent léger
         "tertiary-soft": "#FFF59D",    // Fonds légers
@@ -28,14 +28,14 @@ module.exports = {
         // =========================
         // Couleurs neutres
         // =========================
-        background: "#F8FAF8",
+        background: "#FFFFFF",
         surface: "#FFFFFF",
 
-        heading: "#111827",
-        body: "#4B5563",
+        heading: "#0A0A0A",
+        body: "#4B4B4B",
         muted: "#6B7280",
 
-        border: "#E5E7EB",
+        border: "#E8E8E8",
 
         // =========================
         // États
@@ -79,7 +79,7 @@ module.exports = {
       },
 
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
+        sans: ["\"Inter Variable\"", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
       },
 
       borderRadius: {

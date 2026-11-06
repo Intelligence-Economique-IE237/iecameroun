@@ -5,18 +5,18 @@ import { ArrowUpRight, CalendarDays, MapPin, Images } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RevealOnScroll from "../components/RevealOnScroll";
+import { useListeEvenements } from "../data/evenements/depuisApi";
 import {
-  listeEvenements,
   statutEvenement,
   todayInYaounde,
   STATUT_LABEL,
 } from "../data/evenements";
 
-const SECTION_X = "px-5 sm:px-10 lg:px-24 xl:px-36";
+const SECTION_X = "mx-auto w-full max-w-[1080px] px-5 sm:px-8";
 
 const STATUT_STYLE = {
   "en-cours": "bg-secondary text-white",
-  "a-venir": "bg-tertiary-bg text-tertiary-hover border border-tertiary-soft",
+  "a-venir": "bg-white text-tertiary-hover border border-tertiary/50",
   passe: "bg-background text-muted border border-border",
 };
 
@@ -27,19 +27,19 @@ const EventCard = ({ evt, statut }) => {
   return (
       <Link
           to={`/evenements/${evt.slug}`}
-          className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface no-underline shadow-sm transition-all duration-300 hover:border-primary hover:shadow-lg"
+          className="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-surface no-underline transition-all duration-300 hover:border-heading hover:"
       >
-        <div className="relative aspect-[16/9] overflow-hidden bg-primary-bg">
+        <div className="relative aspect-[16/9] overflow-hidden bg-white">
           {cover ? (
               <img
                   src={cover}
                   alt=""
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-500 "
               />
           ) : (
               <div className="flex h-full w-full items-center justify-center">
-                <span className="font-[Manrope] text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] text-primary">
+                <span className=" text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] text-primary">
                   {evt.sigle}
                 </span>
               </div>
@@ -87,6 +87,7 @@ EventCard.propTypes = {
 
 const Evenements = () => {
   const today = useMemo(todayInYaounde, []);
+  const listeEvenements = useListeEvenements();
 
   useEffect(() => {
     document.title = "Événements | IE237";
@@ -111,21 +112,15 @@ const Evenements = () => {
         <div className="mx-auto w-full max-w-[1440px]">
           <Header hero={false} />
 
-          <main className="w-full text-body font-[Poppins]">
-            <section className={`relative bg-surface ${SECTION_X} py-12 sm:py-16 lg:py-20`}>
-              <img
-                  className="absolute left-0 top-0 w-48 sm:w-72 lg:w-[420px] opacity-40 pointer-events-none"
-                  alt=""
-                  src="/Ellipse-737.svg"
-              />
+          <main className="w-full text-body">
+            <section className={`relative ${SECTION_X} py-12 sm:py-16 lg:py-20`}>
               <RevealOnScroll>
                 <div className="relative flex max-w-3xl flex-col gap-3">
-                  <span className="text-sm uppercase tracking-[0.2em] font-semibold text-primary">Agenda</span>
-                  <h1 className="m-0 font-[Manrope] text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-[-0.03em] text-heading">
+                  <span className="text-[12px] font-medium uppercase tracking-[0.08em] text-muted">Agenda</span>
+                  <h1 className="m-0 text-[40px] sm:text-[52px] font-bold leading-[1.06] tracking-[-0.035em] text-heading">
                     Nos événements
                   </h1>
-                  <div className="h-1 w-16 rounded-full bg-primary" />
-                  <p className="m-0 text-lg sm:text-xl leading-8 text-body">
+                  <p className="m-0 text-[17px] leading-7 text-body">
                     Formations, conférences et rencontres institutionnelles organisées par le Think-Do Tank IE237.
                   </p>
                 </div>

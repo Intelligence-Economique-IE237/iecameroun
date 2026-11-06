@@ -1,34 +1,45 @@
-import PropTypes from "prop-types";
-import RevealOnScroll from "./RevealOnScroll";
+// Contenus du site (textes, chiffres, logos, photos).
+// La mise en page est dans les composants ; on modifie les textes ici.
 
-const piliers = [
+
+// Les quatre piliers d'action
+export const piliers = [
   {
     number: "01",
+    image: "/vignettes/theme-veille.webp",
+    imageAlt: "Graphique de croissance devant un globe",
     title: "Veille stratégique",
     description:
         "Vous aider à anticiper les évolutions de marché et surveiller votre environnement.",
   },
   {
     number: "02",
+    image: "/vignettes/theme-innovation.webp",
+    imageAlt: "Code informatique à l'écran",
     title: "Innovation technologique",
     description:
         "Vous accompagner dans la création de nouvelles solutions et de nouveaux procédés pour faire la différence.",
   },
   {
     number: "03",
+    image: "/vignettes/theme-influence.webp",
+    imageAlt: "Drapeaux de pays africains",
     title: "Influence & lobbying",
     description:
         "Vous aider à défendre vos intérêts et à orienter les décisions dans votre environnement réglementaire.",
   },
   {
     number: "04",
+    image: "/vignettes/theme-securite.webp",
+    imageAlt: "Cadenas numérique",
     title: "Sécurité de l'activité",
     description:
         "Contribuer à la protection de vos actifs, de vos données et de vos ressources stratégiques.",
   },
 ];
 
-const services = [
+// Offres de services (détail dépliable sur l'accueil)
+export const services = [
   {
     number: "01",
     title: "Veille & analyse concurrentielle",
@@ -138,138 +149,94 @@ const services = [
   },
 ];
 
-const ServicesSection = ({ className = "" }) => {
-  return (
-      <section
-          className={`relative w-full bg-background py-16 md:py-20 px-6 sm:px-10 lg:px-[129px] text-left text-xl text-heading font-[Manrope] ${className}`}
-      >
-        <div
-            className="max-w-[1440px] mx-auto flex flex-col gap-16"
-            id="offres-services"
-        >
-          <div className="max-w-[720px] flex flex-col gap-3">
-            <b className="uppercase text-sm text-primary tracking-wide">
-              Nos offres de services
-            </b>
+// Chiffres clés
+export const stats = [
+  { value: "+26000", label: "Personnes touchées" },
+  { value: "+100", label: "Notes d'analyse,\nde veille économique" },
+  { value: "+6", label: "Logiciels d'intelligence économique" },
+];
 
-            <h1 className="m-0 text-[28px] sm:text-[32px] lg:text-[40px] tracking-[-0.03em] leading-tight font-extrabold text-heading">
-              La performance de votre organisation moyennant un dispositif d'Intelligence Économique competitif et adapté à vos besoins.
-            </h1>
+// Logos des institutions partenaires
+export const logosPartenaires1 = [
+  "/logo_cavie_transparent.png.webp",
+  "/IRIC_Yaoundé_Logo.png",
+  "/CRTV_logo_2017.png",
+  "/logo-minfof.webp",
+  "/logo-univ-dschang.png",
+  "/seal.png",
+  "/vignettes/Gpe.webp",
+  "/inst-minjec-CRnim7E5.png",
+  "/images2.jpg",
+  "/images3.jpg",
+  "/minat.svg",
+  "/1630541193691.jpg",
+  "/1599039119.jpg",
+  "/images8.jpg",
+  "/Minddevel.png",
+];
 
-            <p className="m-0 text-base text-body">
-              Quatre piliers d'action.
-            </p>
-          </div>
+export const logosPartenaires2 = [
+  "/logo-minsante-e1760528201942.png",
+  "/logo_minepat.png",
+  "/logo_mincommerce.png",
+  "/logo_minmap.png",
+  "/MINREX.png",
+  "/minat.svg",
+  "/logo-1.png",
+  "/logo_minmap.png",
+  "/images4.jpg",
+  "/images5.jpg",
+  "/images6.jpg",
+  "/Minddevel.png",
+  "/images7.jpg",
+  "/DGSN-logo.jpg",
+  "/1592432400.jpg",
+  "/4XXEPIvK_400x400.jpg",
+  "/vignettes/Gpe.webp",
+];
 
-          {piliers.map((p, index) => (
-              <RevealOnScroll
-                  key={p.number}
-                  delay={index * 120}
-              >
+// Domaines d'expertise
+export const domaines = [
+    { title: "Intelligence Économique & Analyse stratégique", image: "macro.avif" },
+    { title: "Macroéconomie", image: "/macro.avif" },
+    { title: "Sécurité & Défense", image: "/securite-banque-_BD.jpg" },
+    { title: "Communication", image: "/IMG_4124.JPG.jpeg" },
+    { title: "Ingénierie informatique", image: "/pexels-nemuel-6424586.webp" },
+    { title: "Sciences politiques et juridiques", image: "/SCIENCE JURIDIQUE.webp" },
+    { title: "Relations Internationales", image: "/drapeaux-ri-africains.jpg" },
+];
 
-                <div
-                    className="
-        rounded-2xl
-        border border-border
-        bg-surface
-        p-6
-        transition-all
-        duration-300
-        hover:border-primary
-        hover:shadow-md
-      "
-                >
+// Photos de la galerie de l'accueil (vignette = version allégée affichée sur la page)
+export const photos = [
+  { src: "/IMG_8202.JPG.jpeg", vignette: "/vignettes/IMG_8202.webp", titre: "Conférence sur l'import-substitution", lieu: "Dschang", date: "Juillet 2026" },
+  { src: "/IMG_5159.JPG-1.webp", vignette: "/vignettes/IMG_5159-1.webp", titre: "JAIE", lieu: "ENAM", date: "Mai 2026" },
+  { src: "/IMG_2797.webp", vignette: "/vignettes/IMG_2797.webp", titre: "Conférence OMC", lieu: "Palais des Congrès", date: "Mars 2026" },
+  { src: "/0D1A0453.webp", vignette: "/vignettes/0D1A0453.webp", titre: "JAIE", lieu: "ENAM", date: "Mai 2026" },
+  { src: "/IMG_4124.JPG.jpeg", vignette: "/vignettes/IMG_4124.webp", titre: "JAIE", lieu: "ENAM", date: "Mai 2026" },
+  { src: "/IMG_2584.JPG.webp", vignette: "/vignettes/IMG_2584.webp", titre: "Conférence OMC", lieu: "Palais des Congrès", date: "Mars 2026" },
+  { src: "/IMG_0411.JPG.webp", vignette: "/vignettes/IMG_0411.webp", titre: "JAIE", lieu: "ENAM", date: "Mai 2026" },
+  { src: "/IMG_4858.jpg", vignette: "/vignettes/IMG_4858.webp", titre: "CEMPRA AEGC", lieu: "GPE Ngoa-Ékélé", date: "Octobre 2026" },
+  { src: "/IMG_4183.webp", vignette: "/vignettes/IMG_4183.webp", titre: "École des officiers de la Gendarmerie nationale", lieu: "", date: "" },
+  { src: "/IMG_0372.JPG-1.webp", vignette: "/vignettes/IMG_0372.webp", titre: "Bureau régional de l'UNESCO pour l'Afrique centrale", lieu: "", date: "" },
+  { src: "/0D1A0294.webp", vignette: "/vignettes/0D1A0294.webp", titre: "JAIE", lieu: "ENAM", date: "Mai 2026" },
+];
 
-      <span className="text-sm font-bold text-primary">
-        {p.number} —
-      </span>
+// Légende lisible d'une photo
+export const legende = (p) => [p.titre, p.lieu, p.date].filter(Boolean).join(" · ");
 
-                  <h3 className="mt-3 text-lg font-bold text-heading">
-                    {p.title}
-                  </h3>
-
-                  <p className="mt-2 text-sm text-body">
-                    {p.description}
-                  </p>
-
-                </div>
-
-              </RevealOnScroll>
-          ))}
-
-          <div className="flex flex-col gap-10">
-            {services.map((s, index) => (
-                <RevealOnScroll delay={index * 150}>
-                <div
-                    key={s.number}
-                    className="rounded-2xl bg-surface border border-border p-6 sm:p-10 flex flex-col gap-6 shadow-sm hover:shadow-lg transition-all duration-300"
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <div className="flex items-start gap-4">
-              <span className="text-sm font-bold text-primary shrink-0">
-                {s.number}
-              </span>
-
-                      <div className="flex flex-col gap-1">
-                        <h3 className="m-0 text-xl sm:text-2xl font-bold tracking-[-0.02em] text-heading">
-                          {s.title}
-                        </h3>
-
-                        <p className="m-0 text-sm text-body">
-                          {s.tagline}
-                        </p>
-                      </div>
-                    </div>
-
-                    <span className="shrink-0 self-start sm:self-center rounded-full bg-secondary text-white text-xs font-semibold px-4 py-1.5">
-              {s.badge}
-            </span>
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <h4 className="m-0 text-sm font-bold uppercase tracking-wide text-heading">
-                      Présentation
-                    </h4>
-
-                    <p className="m-0 text-base text-body leading-relaxed">
-                      {s.presentation}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col gap-3">
-                    <h4 className="m-0 text-sm font-bold uppercase tracking-wide text-heading">
-                      Ce que nous faisons pour vous
-                    </h4>
-
-                    <ul className="m-0 pl-5 flex flex-col gap-2 list-disc marker:text-primary">
-                      {s.items.map((item) => (
-                          <li key={item} className="text-base text-body">
-                            {item}
-                          </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="rounded-xl bg-tertiary-bg border border-tertiary-soft p-5">
-                    <h4 className="m-0 text-sm font-bold uppercase tracking-wide text-primary">
-                      Valeur ajoutée
-                    </h4>
-
-                    <p className="mt-2 text-base text-body">
-                      {s.valeur}
-                    </p>
-                  </div>
-                </div>
-                </RevealOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
-  );
+// Images d'illustration des sections de l'accueil
+export const images = {
+  ouverture: ["/vignettes/IMG_4183.webp", "/vignettes/IMG_0372.webp"],
+  offres: { src: "/vignettes/drapeaux-international.webp", alt: "Drapeaux devant un siège d'organisation internationale" },
+  aPropos: [
+    { src: "/vignettes/0D1A0294.webp", alt: "Échanges sur un stand lors d'un événement" },
+    { src: "/vignettes/IMG_8252.webp", alt: "Remise d'un présent lors d'une visite institutionnelle (Conseil Regional de l'Ouest)" },
+  ],
+  appel: { src: "/Visuel-1-Vue-aerienne-Yaounde.jpg", alt: "Vue aérienne de Yaoundé" },
+  // Diaporama de l'ouverture (photos larges, au format paysage)
+  diaporama: [
+    { src: "/vignettes/IMG_8202.webp", legende: "Conférence sur l'import-substitution · Dschang · Juillet 2026" },
+    { src: "/vignettes/IMG_2584.webp", legende: "Conférence OMC · Palais des Congrès · Mars 2026" },
+    { src: "/vignettes/IMG_4183.webp", legende: "École des officiers de la Gendarmerie nationale" },
+  ],
 };
-
-ServicesSection.propTypes = {
-  className: PropTypes.string,
-};
-
-export default ServicesSection;

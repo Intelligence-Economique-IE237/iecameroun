@@ -34,7 +34,7 @@ const Thumbnail = ({ photo, onOpen }) => {
       <button
           type="button"
           onClick={onOpen}
-          className={`relative block w-full cursor-zoom-in overflow-hidden rounded-3xl border-none bg-surface p-0 shadow-sm ${
+          className={`relative block w-full cursor-zoom-in overflow-hidden rounded-3xl border-none bg-surface p-0 ${
               loaded ? "" : "min-h-[240px]"
           }`}
           aria-label={`Agrandir la photo${photo.legende ? ` : ${photo.legende}` : ""}`}
@@ -66,7 +66,7 @@ const Thumbnail = ({ photo, onOpen }) => {
       {/* Toujours visible sur mobile, au survol sur ordinateur */}
       <DownloadLink
           photo={photo}
-          className="absolute right-3 top-3 bg-white/90 text-primary shadow-sm hover:bg-white sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+          className="absolute right-3 top-3 bg-white/90 text-primary hover:bg-white sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
       />
       </div>
   );
@@ -112,7 +112,7 @@ const Lightbox = ({ photos, index, onClose, onChange }) => {
             href={photo.src}
             download={nomFichier(photo)}
             onClick={(e) => e.stopPropagation()}
-            className="absolute right-[4.25rem] top-4 flex h-11 items-center gap-2 rounded-full bg-white/10 px-4 text-sm font-medium text-white no-underline transition-colors hover:bg-white/25 font-[Poppins]"
+            className="absolute right-[4.25rem] top-4 flex h-11 items-center gap-2 rounded-full bg-white/10 px-4 text-sm font-medium text-white no-underline transition-colors hover:bg-white/25"
         >
           <Download className="h-4 w-4" />
           <span className="hidden sm:inline">Télécharger</span>
@@ -128,8 +128,8 @@ const Lightbox = ({ photos, index, onClose, onChange }) => {
         </button>
 
         <figure className="m-0 flex max-h-full max-w-5xl flex-col items-center gap-4" onClick={(e) => e.stopPropagation()}>
-          <img src={photo.src} alt={photo.legende ?? ""} className="max-h-[78vh] max-w-full rounded-2xl object-contain" />
-          <figcaption className="text-center text-sm text-white/85 font-[Poppins]">
+          <img src={photo.src} alt={photo.legende ?? ""} className="max-h-[78vh] max-w-full rounded-lg object-contain" />
+          <figcaption className="text-center text-sm text-white/85">
             {photo.legende && <span>{photo.legende} · </span>}
             {index + 1} / {photos.length}
           </figcaption>
@@ -188,7 +188,7 @@ const EventGallery = ({
   if (photos.length === 0) {
     return (
         <RevealOnScroll>
-          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-primary-soft bg-primary-bg px-6 py-14 text-center">
+          <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border bg-white px-6 py-14 text-center">
             <Camera className="h-8 w-8 text-primary" />
             <p className="m-0 max-w-md text-base text-body">{emptyMessage}</p>
           </div>

@@ -141,7 +141,7 @@ const mopiet2026 = {
   lieu: "Bastos, Yaoundé",
   couverture: null,
   infos: [
-    { icon: "users", label: "Organisateurs", value: "DGRE – CAVIE – IE237" },
+    { icon: "users", label: "Organisateurs", value: "CAVIE – IE237" },
     { icon: "graduation", label: "Formateur principal", value: "Dr Guy GWETH" },
     { icon: "user-check", label: "Point focal", value: "Dr KITIO Victor" },
   ],
