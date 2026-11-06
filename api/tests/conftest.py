@@ -33,17 +33,19 @@ from src.services import utilisateur_service  # noqa: E402
 MDP = "motdepasse-de-test"
 EMAIL_ADMIN = "admin@test.cm"
 EMAIL_EDITEUR = "editeur@test.cm"
+EMAIL_ANALYSTE = "analyste@test.cm"
 
 
 @pytest.fixture()
 def client():
-    # Base vide + toutes les migrations Alembic, puis un Admin et un Éditeur
+    # Base vide + toutes les migrations Alembic, puis un compte par rôle
     with engine.begin() as conn:
         conn.execute(text("DROP SCHEMA public CASCADE; CREATE SCHEMA public;"))
     command.upgrade(Config("alembic.ini"), "head")
     with Session(engine) as session:
         utilisateur_service.enregistrer_ou_reinitialiser(session, EMAIL_ADMIN, MDP, "Admin", Role.ADMIN)
         utilisateur_service.enregistrer_ou_reinitialiser(session, EMAIL_EDITEUR, MDP, "Éditeur", Role.EDITEUR)
+        utilisateur_service.enregistrer_ou_reinitialiser(session, EMAIL_ANALYSTE, MDP, "Analyste", Role.ANALYSTE)
     with TestClient(app) as c:
         yield c
 
@@ -61,3 +63,8 @@ def admin(client):
 @pytest.fixture()
 def editeur(client):
     return _entetes(client, EMAIL_EDITEUR)
+
+
+@pytest.fixture()
+def analyste(client):
+    return _entetes(client, EMAIL_ANALYSTE)

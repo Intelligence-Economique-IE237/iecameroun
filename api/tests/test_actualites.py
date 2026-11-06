@@ -28,11 +28,13 @@ def test_cycle_actualite(client, admin):
     r2 = client.post("/admin/actualites", headers=admin, json={"titre": "Clôture MOPIET à Yaoundé"})
     assert r2.json()["slug"] == "cloture-mopiet-a-yaounde-2"
 
-    # Publication → visible sur le site
-    r = client.patch(f"/admin/actualites/{actu['id']}", headers=admin, json={"publie": True})
-    assert r.json()["publie_le"] is not None
+    # Publication directe par l'Admin → visible sur le site
+    r = client.post(f"/admin/actualites/{actu['id']}/statut", headers=admin, json={"action": "publier"})
+    assert r.json()["publie_le"] is not None and r.json()["statut"] == "publie"
     assert [a["slug"] for a in client.get("/actualites").json()] == ["cloture-mopiet-a-yaounde"]
     assert client.get("/actualites/cloture-mopiet-a-yaounde").status_code == 200
+    # Le site ne voit jamais les champs internes de validation
+    assert "commentaire" not in client.get("/actualites/cloture-mopiet-a-yaounde").json()
 
     # Suppression
     assert client.delete(f"/admin/actualites/{actu['id']}", headers=admin).status_code == 204
@@ -52,3 +54,21 @@ def test_image(client, admin):
     assert chemin.startswith("/uploads/actualites/")
     assert client.get(chemin).status_code == 200
 
+
+
+def test_auteur_et_mise_en_forme(client, editeur):
+    # L'auteur est le compte connecté ; le HTML dangereux est retiré, la mise en forme gardée
+    html = (
+        '<h2>Contexte</h2><p><strong>Gras</strong> et <em>italique</em>'
+        '<script>alert(1)</script> <a href="javascript:alert(1)">lien</a>'
+        ' <a href="https://iecameroun.cm">site</a></p><img src=x onerror=alert(1)>'
+    )
+    actu = client.post("/admin/actualites", headers=editeur, json={"titre": "Mise en forme", "contenu": html}).json()
+    assert actu["auteur"] == "Éditeur"
+    contenu = actu["contenu"]
+    assert "<h2>Contexte</h2>" in contenu and "<strong>Gras</strong>" in contenu
+    assert "script" not in contenu and "javascript:" not in contenu and "<img" not in contenu
+    assert 'href="https://iecameroun.cm"' in contenu
+
+    r = client.patch(f"/admin/actualites/{actu['id']}", headers=editeur, json={"contenu": "<p onclick='x()'>Ok</p>"})
+    assert r.json()["contenu"] == "<p>Ok</p>"

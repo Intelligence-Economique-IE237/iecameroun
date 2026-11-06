@@ -1,4 +1,4 @@
-"""Tests des rôles Admin / Éditeur (base de test, voir conftest.py)."""
+"""Tests des rôles Admin / Éditeur / Analyste (base de test, voir conftest.py)."""
 from tests.conftest import EMAIL_EDITEUR, MDP
 
 
@@ -6,8 +6,11 @@ def test_editeur_gere_le_contenu(client, editeur):
     actu = client.post("/admin/actualites", headers=editeur, json={"titre": "Par l'éditeur"})
     assert actu.status_code == 201
     id_ = actu.json()["id"]
-    assert client.patch(f"/admin/actualites/{id_}", headers=editeur, json={"publie": True}).status_code == 200
+    assert client.patch(f"/admin/actualites/{id_}", headers=editeur, json={"resume": "Texte"}).status_code == 200
     assert client.get("/admin/actualites", headers=editeur).status_code == 200
+    # Pas de publication sans validation
+    r = client.post(f"/admin/actualites/{id_}/statut", headers=editeur, json={"action": "publier"})
+    assert r.status_code == 400
 
 
 def test_editeur_ne_supprime_pas(client, admin, editeur):
@@ -44,7 +47,11 @@ def test_admin_gere_les_comptes(client, admin):
     r = client.patch(f"/admin/utilisateurs/{nouveau['id']}", headers=admin, json={"role": "admin"})
     assert r.json()["role"] == "admin"
     assert client.delete(f"/admin/utilisateurs/{nouveau['id']}", headers=admin).status_code == 204
-    assert len(client.get("/admin/utilisateurs", headers=admin).json()) == 2
+    assert len(client.get("/admin/utilisateurs", headers=admin).json()) == 3
+
+    # Rôle Analyste
+    r = client.post("/admin/utilisateurs", headers=admin, json={"email": "c@test.cm", "mot_de_passe": MDP, "role": "analyste"})
+    assert r.json()["role"] == "analyste"
 
 
 def test_changement_de_role_immediat(client, admin, editeur):

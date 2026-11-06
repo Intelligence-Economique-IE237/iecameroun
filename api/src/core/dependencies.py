@@ -43,5 +43,7 @@ UtilisateurDep = Annotated[Utilisateur, Depends(utilisateur_connecte)]
 AdminDep = Annotated[Utilisateur, Depends(exiger_role(Role.ADMIN))]
 
 # Raccourcis pour les routes
-connecte = Depends(utilisateur_connecte)            # Admin ou Éditeur
-admin_seulement = Depends(exiger_role(Role.ADMIN))  # Admin uniquement
+connecte = Depends(utilisateur_connecte)                             # tout compte connecté
+admin_seulement = Depends(exiger_role(Role.ADMIN))                   # Admin uniquement
+redaction = Depends(exiger_role(Role.ADMIN, Role.EDITEUR))           # rédiger actualités et événements
+analyse = Depends(exiger_role(Role.ADMIN, Role.ANALYSTE))            # gérer les livrables

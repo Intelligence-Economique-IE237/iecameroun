@@ -6,7 +6,8 @@ from sqlmodel import Field, SQLModel
 
 class Role(str, Enum):
     ADMIN = "admin"      # tout, y compris la gestion des comptes
-    EDITEUR = "editeur"  # gère le contenu, sans supprimer ni gérer les comptes
+    EDITEUR = "editeur"  # rédige et publie les actualités (une fois validées), gère les événements
+    ANALYSTE = "analyste"  # valide les actualités avant publication, gère les livrables
 
 
 class Utilisateur(SQLModel, table=True):
