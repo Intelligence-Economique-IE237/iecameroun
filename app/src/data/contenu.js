@@ -78,7 +78,7 @@ export const services = [
   },
   {
     number: "03",
-    title: "OSINT & renseignement en sources ouvertes",
+    title: "Renseignement en sources ouvertes",
     tagline: "Exploiter légalement la mine d'or des données publiques.",
     badge: "Méthode différenciante",
     presentation:

@@ -10,7 +10,7 @@ export const lienDevis = (offre) => {
   const corps = [
     "Bonjour,",
     "",
-    offre ? `Nous souhaitons recevoir un devis pour l'offre « ${offre} ».` : "Nous souhaitons recevoir un devis pour un accompagnement IE237.",
+    offre ? `Nous souhaitons recevoir un devis pour l'offre « ${offre} ».` : "Nous souhaitons recevoir un devis pour un accompagnement du Think-Do Tank IE237.",
     "",
     "Organisation :",
     "Secteur d'activité :",
