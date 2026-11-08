@@ -7,6 +7,8 @@ import "@fontsource/poppins/latin-600.css";
 import "./index.css";
 import App from "./App";
 import { AuthProvider } from "./context/AuthContext";
+import { API_URL } from "./api/client";
+import { initialiserTraduction } from "./traduction/traducteur";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -17,3 +19,6 @@ createRoot(document.getElementById("root")).render(
     </BrowserRouter>
   </StrictMode>,
 );
+
+// Traduction automatique de l'interface (bouton FR | EN de la barre latérale)
+initialiserTraduction(API_URL);

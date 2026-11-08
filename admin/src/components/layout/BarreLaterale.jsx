@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import { CalendarDays, FileText, LayoutGrid, LogOut, Newspaper, PanelLeftClose, Users } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { ROLES, initiales } from "../../utils/format";
+import SelecteurLangue from "../../traduction/SelecteurLangue";
 
 const MENU = [
   { vers: "/", libelle: "Tableau de bord", icone: LayoutGrid, fin: true },
@@ -46,7 +47,7 @@ export default function BarreLaterale({ ouverte, onFermer }) {
           <div className="flex items-center gap-2.5">
             <img src="/logo-ie237.svg" alt="" className="size-9" />
             <div className="leading-tight">
-              <p className="text-base font-semibold text-heading">IE237</p>
+              <p translate="no" className="text-base font-semibold text-heading">IE237</p>
               <p className="text-xs text-muted">Administration</p>
             </div>
           </div>
@@ -62,15 +63,17 @@ export default function BarreLaterale({ ouverte, onFermer }) {
           ))}
         </nav>
 
+        <SelecteurLangue className="px-6 pb-3" />
+
         <div className="border-t border-line/70 p-3">
           <div className="flex items-center gap-3 rounded-lg px-2 py-2">
-            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-xs font-semibold text-white">
+            <span translate="no" className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-xs font-semibold text-white">
               {initiales(utilisateur?.nom, utilisateur?.email)}
             </span>
             <div className="min-w-0 flex-1 leading-tight">
-              <p className="truncate text-sm font-medium text-heading">{utilisateur?.nom || utilisateur?.email}</p>
+              <p translate="no" className="truncate text-sm font-medium text-heading">{utilisateur?.nom || utilisateur?.email}</p>
               <p className="truncate text-xs text-muted">
-                {ROLES[utilisateur?.role]} · {utilisateur?.email}
+                {ROLES[utilisateur?.role]} · <span translate="no">{utilisateur?.email}</span>
               </p>
             </div>
             <button onClick={deconnecter} className="rounded-md p-1.5 text-muted hover:bg-gray-100 hover:text-secondary" aria-label="Se déconnecter" title="Se déconnecter">

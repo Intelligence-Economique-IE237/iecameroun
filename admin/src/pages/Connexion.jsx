@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import Button from "../components/ui/Button";
 import Alerte from "../components/ui/Alerte";
 import { Champ } from "../components/ui/Champ";
+import SelecteurLangue from "../traduction/SelecteurLangue";
 
 export default function Connexion() {
   const { utilisateur, connecter, sessionExpiree } = useAuth();
@@ -34,6 +35,7 @@ export default function Connexion() {
   return (
     <div className="grid min-h-screen place-items-center px-4">
       <div className="w-full max-w-sm">
+        <SelecteurLangue className="mb-6 items-center" />
         <div className="mb-8 flex flex-col items-center text-center">
           <img src="/logo-ie237.svg" alt="IE237" className="size-16" />
           <h1 className="mt-4 text-xl font-semibold text-heading">Administration IE237</h1>
