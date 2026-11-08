@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { handleAnchorClick } from "../utils/scrollToSection";
 import { classeBouton } from "./ui";
+import SelecteurLangue from "../traduction/SelecteurLangue";
 
 // target = section de l'accueil, to = page
 export const navItems = [
@@ -56,7 +57,7 @@ const Header = ({ className = "" }) => {
             <Link to="/" className="flex shrink-0 items-center gap-2.5 no-underline" aria-label="IE237, accueil">
               <img src="/logo-ie237.svg" alt="" className="h-10 w-10" />
               <span className="flex flex-col leading-tight">
-                <span className="text-[18px] font-bold tracking-[-0.01em] text-heading">IE237</span>
+                <span translate="no" className="text-[18px] font-bold tracking-[-0.01em] text-heading">IE237</span>
               </span>
             </Link>
 
@@ -66,21 +67,25 @@ const Header = ({ className = "" }) => {
               )}
             </div>
 
-            <div className="hidden lg:block">
+            <div className="hidden items-center gap-4 lg:flex">
+              <SelecteurLangue />
               <a href={CONTACT} className={`${classeBouton()} !py-2`}>
                 Nous contacter
               </a>
             </div>
 
-            <button
-                type="button"
-                className="flex h-10 w-10 items-center justify-center rounded-full border-none bg-transparent text-heading lg:hidden"
-                onClick={() => setMenuOpen((v) => !v)}
-                aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-                aria-expanded={menuOpen}
-            >
-              {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
+            <div className="flex items-center gap-2 lg:hidden">
+              <SelecteurLangue />
+              <button
+                  type="button"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border-none bg-transparent text-heading lg:hidden"
+                  onClick={() => setMenuOpen((v) => !v)}
+                  aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+                  aria-expanded={menuOpen}
+              >
+                {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
+            </div>
           </div>
 
 

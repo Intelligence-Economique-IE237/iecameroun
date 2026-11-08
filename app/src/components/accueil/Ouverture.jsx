@@ -60,7 +60,7 @@ const Diapos = ({ actif, className = "" }) => (
               src={d.src}
               alt={i === actif ? d.legende : ""}
               aria-hidden={i !== actif}
-              fetchPriority={i === 0 ? "high" : "low"}
+              fetchpriority={i === 0 ? "high" : "low"}
               className={`diapo absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-out ${
                   i === actif ? "diapo--active opacity-100" : "opacity-0"
               }`}

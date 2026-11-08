@@ -6,6 +6,8 @@ import { BrowserRouter } from "react-router-dom";
 import "@fontsource-variable/inter";
 import "./global.css";
 import { masquerChargeur } from "./utils/chargeur";
+import { API_URL } from "./api";
+import { initialiserTraduction } from "./traduction/traducteur";
 
 const container = document.getElementById("root");
 
@@ -18,6 +20,9 @@ root.render(
 
 // Le site est monté : on retire l'écran de chargement dès que la page est prête
 masquerChargeur();
+
+// Traduction automatique (bouton FR | EN de l'en-tête)
+initialiserTraduction(API_URL);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
