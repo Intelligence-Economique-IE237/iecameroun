@@ -6,8 +6,22 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from src.core.config import CORS_ORIGINS, UPLOAD_DIR
-from src.core.erreurs import DonneesInvalides, Interdit, Introuvable, NonAutorise
-from src.routes import actualite_routes, auth_routes, evenement_routes, livrable_routes, utilisateur_routes
+from src.core.erreurs import (
+    DonneesInvalides,
+    Interdit,
+    Introuvable,
+    NonAutorise,
+    ServiceIndisponible,
+    TropDeRequetes,
+)
+from src.routes import (
+    actualite_routes,
+    auth_routes,
+    evenement_routes,
+    livrable_routes,
+    traduction_routes,
+    utilisateur_routes,
+)
 
 # Le schéma de la base est géré par Alembic : lancer `alembic upgrade head` avant de démarrer
 app = FastAPI(title="API IE237")
@@ -31,6 +45,8 @@ app.add_exception_handler(Introuvable, _erreur(404))
 app.add_exception_handler(DonneesInvalides, _erreur(400))
 app.add_exception_handler(NonAutorise, _erreur(401))
 app.add_exception_handler(Interdit, _erreur(403))
+app.add_exception_handler(TropDeRequetes, _erreur(429))
+app.add_exception_handler(ServiceIndisponible, _erreur(503))
 
 # Images envoyées depuis l'admin, servies sur /uploads/...
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -44,6 +60,7 @@ app.include_router(evenement_routes.public)
 app.include_router(evenement_routes.admin)
 app.include_router(livrable_routes.public)
 app.include_router(livrable_routes.admin)
+app.include_router(traduction_routes.router)
 
 
 @app.get("/health", tags=["Santé"])

@@ -19,3 +19,11 @@ class NonAutorise(Exception):
 
 class Interdit(Exception):
     """Action refusée pour ce rôle ou à cette étape (ex. modifier un article en relecture)."""
+
+
+class ServiceIndisponible(Exception):
+    """Service externe absent ou en panne (ex. traduction non configurée, quota DeepL atteint)."""
+
+
+class TropDeRequetes(Exception):
+    """Limite d'utilisation atteinte pour ce visiteur."""
