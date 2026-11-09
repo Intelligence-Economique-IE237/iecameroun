@@ -1,7 +1,3 @@
-// Contenus du site (textes, chiffres, logos, photos).
-// La mise en page est dans les composants ; on modifie les textes ici.
-
-
 // Les quatre piliers d'action
 export const piliers = [
   {
@@ -158,7 +154,6 @@ export const stats = [
 
 // Logos des institutions partenaires
 export const logosPartenaires1 = [
-  "/logo_cavie_transparent.png.webp",
   "/IRIC_Yaoundé_Logo.png",
   "/CRTV_logo_2017.png",
   "/logo-minfof.webp",
