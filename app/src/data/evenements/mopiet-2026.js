@@ -141,11 +141,11 @@ const mopiet2026 = {
   lieu: "Bastos, Yaoundé",
   couverture: null,
   infos: [
-    { icon: "users", label: "Organisateurs", value: "CAVIE – IE237" },
-    { icon: "graduation", label: "Formateur principal", value: "Dr Guy GWETH" },
+    { icon: "users", label: "Organisateurs", value: "IE237" },
+  { icon: "graduation", label: "Formateur principal", value: "Président du CAVIE" },
     { icon: "user-check", label: "Point focal", value: "Dr KITIO Victor" },
   ],
-  document: { href: "/evenements/mopiet-2026/Chronogramme_MOPIET_2026.pdf", label: "Télécharger le chronogramme (PDF)" },
+  document: { href: "/evenements/mopiet-2026/", label: "Télécharger le chronogramme (PDF)" },
   jours,
   volets,
   certification:
